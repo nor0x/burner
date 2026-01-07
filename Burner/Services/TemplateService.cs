@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 using Burner.Models;
 using Spectre.Console;
 
@@ -7,10 +8,12 @@ namespace Burner.Services;
 public class TemplateService
 {
 	private readonly BurnerConfig _config;
+	private readonly Assembly _assembly;
 
 	public TemplateService(BurnerConfig config)
 	{
 		_config = config;
+		_assembly = Assembly.GetExecutingAssembly();
 		EnsureBuiltInTemplatesExist();
 	}
 
@@ -35,7 +38,7 @@ public class TemplateService
 	{
 		EnsureBuiltInTemplatesExist();
 
-		var builtIn = new[] { "dotnet", "web" };
+		var builtInNames = GetBuiltInTemplateNames();
 		var templates = new List<(string Name, string Filename, bool IsBuiltIn)>();
 
 		if (Directory.Exists(_config.BurnerTemplates))
@@ -47,7 +50,7 @@ public class TemplateService
 			{
 				var name = Path.GetFileNameWithoutExtension(file);
 				var filename = Path.GetFileName(file);
-				var isBuiltIn = builtIn.Contains(name, StringComparer.OrdinalIgnoreCase);
+				var isBuiltIn = builtInNames.Contains(name, StringComparer.OrdinalIgnoreCase);
 				templates.Add((name, filename, isBuiltIn));
 			}
 		}
@@ -70,10 +73,10 @@ public class TemplateService
 		}
 
 		// All templates now go through the custom template runner
-		return CreateCustomProject(template, projectPath, projectName);
+		return CreateCustomProject(template, projectPath, name, projectName);
 	}
 
-	private bool CreateCustomProject(string template, string projectPath, string projectName)
+	private bool CreateCustomProject(string template, string projectPath, string simpleName, string datedName)
 	{
 		EnsureBuiltInTemplatesExist();
 
@@ -90,25 +93,38 @@ public class TemplateService
 		{
 			StartInfo = new ProcessStartInfo
 			{
-				FileName = scriptPath,
-				Arguments = $"\"{projectName}\" \"{projectPath}\"",
+				WorkingDirectory = projectPath,
 				RedirectStandardOutput = true,
 				RedirectStandardError = true,
 				UseShellExecute = false
 			}
 		};
 
-		// Handle different script types on Windows
+		// Expose environment variables for simpler template scripts
+		process.StartInfo.Environment["BURNER_NAME"] = simpleName;
+		process.StartInfo.Environment["BURNER_PATH"] = projectPath;
+		process.StartInfo.Environment["BURNER_DATED_NAME"] = datedName;
+
+		// Handle different script types
 		var extension = Path.GetExtension(scriptPath).ToLower();
 		if (extension == ".ps1")
 		{
 			process.StartInfo.FileName = "pwsh";
-			process.StartInfo.Arguments = $"-File \"{scriptPath}\" \"{projectName}\" \"{projectPath}\"";
+			process.StartInfo.Arguments = $"-File \"{scriptPath}\"";
 		}
 		else if (extension == ".py")
 		{
 			process.StartInfo.FileName = "python";
-			process.StartInfo.Arguments = $"\"{scriptPath}\" \"{projectName}\" \"{projectPath}\"";
+			process.StartInfo.Arguments = $"\"{scriptPath}\"";
+		}
+		else if (extension == ".sh")
+		{
+			process.StartInfo.FileName = "bash";
+			process.StartInfo.Arguments = $"\"{scriptPath}\"";
+		}
+		else
+		{
+			process.StartInfo.FileName = scriptPath;
 		}
 
 		process.Start();
@@ -139,161 +155,39 @@ public class TemplateService
 		Directory.CreateDirectory(_config.BurnerTemplates);
 
 		var extension = OperatingSystem.IsWindows() ? ".ps1" : ".sh";
+		var builtInTemplates = GetBuiltInTemplateNames();
 
-		// Create dotnet template if it doesn't exist
-		var dotnetPath = Path.Combine(_config.BurnerTemplates, $"dotnet{extension}");
-		if (!File.Exists(dotnetPath))
+		foreach (var templateName in builtInTemplates)
 		{
-			File.WriteAllText(dotnetPath, GetDotnetTemplateScript(extension));
-		}
-
-		// Create web template if it doesn't exist
-		var webPath = Path.Combine(_config.BurnerTemplates, $"web{extension}");
-		if (!File.Exists(webPath))
-		{
-			File.WriteAllText(webPath, GetWebTemplateScript(extension));
+			var targetPath = Path.Combine(_config.BurnerTemplates, $"{templateName}{extension}");
+			if (!File.Exists(targetPath))
+			{
+				var content = GetEmbeddedTemplate(templateName, extension);
+				if (content != null)
+				{
+					File.WriteAllText(targetPath, content);
+				}
+			}
 		}
 	}
 
-	private static string GetDotnetTemplateScript(string extension)
+	private IEnumerable<string> GetBuiltInTemplateNames()
 	{
-		if (extension == ".ps1")
-		{
-			return """
-				#!/usr/bin/env pwsh
-				# Burner built-in template: .NET Console Application
-				param(
-				    [Parameter(Mandatory=$true, Position=0)]
-				    [string]$ProjectName,
-				    [Parameter(Mandatory=$true, Position=1)]
-				    [string]$TargetDirectory
-				)
-				$ErrorActionPreference = "Stop"
-				Push-Location $TargetDirectory
-				try {
-				    dotnet new console -n $ProjectName -o . --force
-				    if ($LASTEXITCODE -ne 0) { exit 1 }
-				}
-				finally { Pop-Location }
-				""";
-		}
-		else
-		{
-			return """
-				#!/bin/bash
-				# Burner built-in template: .NET Console Application
-				set -e
-				PROJECT_NAME="$1"
-				TARGET_DIRECTORY="$2"
-				cd "$TARGET_DIRECTORY"
-				dotnet new console -n "$PROJECT_NAME" -o . --force
-				""";
-		}
+		var prefix = "Burner.Templates.";
+		var extension = OperatingSystem.IsWindows() ? ".ps1" : ".sh";
+
+		return _assembly.GetManifestResourceNames()
+			.Where(n => n.StartsWith(prefix) && n.EndsWith(extension))
+			.Select(n => n[prefix.Length..^extension.Length])
+			.Distinct();
 	}
 
-	private static string GetWebTemplateScript(string extension)
+	private string? GetEmbeddedTemplate(string name, string extension)
 	{
-		if (extension == ".ps1")
-		{
-			return """
-				#!/usr/bin/env pwsh
-				# Burner built-in template: HTML + JS + CSS Web App
-				param(
-				    [Parameter(Mandatory=$true, Position=0)]
-				    [string]$ProjectName,
-				    [Parameter(Mandatory=$true, Position=1)]
-				    [string]$TargetDirectory
-				)
-				$ErrorActionPreference = "Stop"
-
-				$indexHtml = @"
-				<!DOCTYPE html>
-				<html lang="en">
-				<head>
-				    <meta charset="UTF-8">
-				    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-				    <title>$ProjectName</title>
-				    <link rel="stylesheet" href="styles.css">
-				</head>
-				<body>
-				    <h1>$ProjectName</h1>
-				    <p>Your web experiment starts here!</p>
-				    <script src="script.js"></script>
-				</body>
-				</html>
-				"@
-
-				$stylesCss = @"
-				* { margin: 0; padding: 0; box-sizing: border-box; }
-				body {
-				    font-family: system-ui, -apple-system, sans-serif;
-				    line-height: 1.6;
-				    padding: 2rem;
-				    max-width: 800px;
-				    margin: 0 auto;
-				    background: #1a1a2e;
-				    color: #eee;
-				}
-				h1 { color: #ff6b35; margin-bottom: 1rem; }
-				p { color: #aaa; }
-				"@
-
-				$scriptJs = @"
-				console.log('$ProjectName loaded!');
-				document.addEventListener('DOMContentLoaded', () => console.log('DOM ready'));
-				"@
-
-				Set-Content -Path (Join-Path $TargetDirectory "index.html") -Value $indexHtml
-				Set-Content -Path (Join-Path $TargetDirectory "styles.css") -Value $stylesCss
-				Set-Content -Path (Join-Path $TargetDirectory "script.js") -Value $scriptJs
-				""";
-		}
-		else
-		{
-			return """
-				#!/bin/bash
-				# Burner built-in template: HTML + JS + CSS Web App
-				set -e
-				PROJECT_NAME="$1"
-				TARGET_DIRECTORY="$2"
-
-				cat > "$TARGET_DIRECTORY/index.html" << EOF
-				<!DOCTYPE html>
-				<html lang="en">
-				<head>
-				    <meta charset="UTF-8">
-				    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-				    <title>$PROJECT_NAME</title>
-				    <link rel="stylesheet" href="styles.css">
-				</head>
-				<body>
-				    <h1>$PROJECT_NAME</h1>
-				    <p>Your web experiment starts here!</p>
-				    <script src="script.js"></script>
-				</body>
-				</html>
-				EOF
-
-				cat > "$TARGET_DIRECTORY/styles.css" << 'EOF'
-				* { margin: 0; padding: 0; box-sizing: border-box; }
-				body {
-				    font-family: system-ui, -apple-system, sans-serif;
-				    line-height: 1.6;
-				    padding: 2rem;
-				    max-width: 800px;
-				    margin: 0 auto;
-				    background: #1a1a2e;
-				    color: #eee;
-				}
-				h1 { color: #ff6b35; margin-bottom: 1rem; }
-				p { color: #aaa; }
-				EOF
-
-				cat > "$TARGET_DIRECTORY/script.js" << EOF
-				console.log('$PROJECT_NAME loaded!');
-				document.addEventListener('DOMContentLoaded', () => console.log('DOM ready'));
-				EOF
-				""";
-		}
+		var resourceName = $"Burner.Templates.{name}{extension}";
+		using var stream = _assembly.GetManifestResourceStream(resourceName);
+		if (stream == null) return null;
+		using var reader = new StreamReader(stream);
+		return reader.ReadToEnd();
 	}
 }

@@ -147,23 +147,48 @@ Extend Burner with your own templates by adding executable scripts to the `templ
 
 - Scripts can be written in any language (bash, PowerShell, Python, etc.)
 - Must be executable from the command line
-- Script filename becomes the template alias
+- Script filename becomes the template alias (e.g., `react.ps1` → `react`)
 
-### Script Arguments
+### Environment Variables
 
-| Argument | Description |
-|----------|-------------|
-| *(template alias)* | Template name is derived from the script filename (e.g., `react.ps1` → `react`) |
-| `$1`     | Project name (auto-generated as `{template}-HHMMSS` if not provided by user) |
-| `$2`     | Target directory (uses configured burner home if not provided) |
+Burner sets these environment variables before running your template script:
 
-### Example
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `BURNER_NAME` | User-provided project name | `my-experiment` |
+| `BURNER_PATH` | Full path to project directory | `/home/user/.burner/projects/260107-my-experiment` |
+| `BURNER_DATED_NAME` | Dated folder name | `260107-my-experiment` |
 
-A template script named `react.ps1` in the templates directory would be invoked as:
+The working directory is automatically set to `BURNER_PATH`, so you can create files directly without changing directories.
 
+### Example Templates
+
+**PowerShell (`react.ps1`):**
+```powershell
+#!/usr/bin/env pwsh
+# Creates a React app using Vite
+npm create vite@latest . -- --template react
+npm install
+```
+
+**Bash (`react.sh`):**
 ```bash
-burner new react                # Name auto-generated: react-143052
-burner new react my-experiment  # Name: my-experiment
+#!/bin/bash
+# Creates a React app using Vite
+set -e
+npm create vite@latest . -- --template react
+npm install
+```
+
+**Python (`python.py`):**
+```python
+#!/usr/bin/env python3
+import os
+name = os.environ['BURNER_NAME']
+with open('main.py', 'w') as f:
+    f.write(f'# {name}\nprint("Hello from {name}!")\n')
+with open('requirements.txt', 'w') as f:
+    f.write('')
 ```
 
 ## Configuration
