@@ -11,7 +11,7 @@
 		<ToolCommandName>burner</ToolCommandName>
 
 		<!-- Package Metadata -->
-		<PackageId>Burner</PackageId>
+		<PackageId>Burner-CLI</PackageId>
 		<Version>1.0.0</Version>
 		<Authors>Joachim Leonfellner</Authors>
 		<Description>A CLI tool to create and manage temporary dev projects for quick experiments. Spark

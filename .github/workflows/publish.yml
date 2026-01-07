@@ -1,3 +1,8 @@
+# to create a new release, run:
+#git tag v1.0.0
+#git push origin v1.0.0
+# or use the "Run workflow" button to publish a specific version
+
 name: Publish to NuGet
 
 on:

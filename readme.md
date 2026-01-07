@@ -1,19 +1,22 @@
 # Burner 🔥
 
-<img src="Art/icon_alpha.png" alt="Burner Logo" width="90" align="right" />
+<img src="Art/icon_alpha.png" alt="Burner Logo" width="110" style="margin-bottom:20px"  />
 
 
+[![CI](https://github.com/nor0x/burner/actions/workflows/ci.yml/badge.svg)](https://github.com/nor0x/burner/actions/workflows/ci.yml)
+[![Publish to NuGet](https://github.com/nor0x/burner/actions/workflows/publish.yml/badge.svg)](https://github.com/nor0x/burner/actions/workflows/publish.yml)
+[![NuGet](https://img.shields.io/nuget/v/Burner-CLI.svg)](https://www.nuget.org/packages/Burner-CLI)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Burner-CLI.svg)](https://www.nuget.org/packages/Burner-CLI)
 
 A CLI tool to create and manage temporary dev projects for quick experiments.
 
 *Spark ideas. Burn when done.*
 
 
-
 ## Installation
 
 ```
-dotnet tool install -g burner
+dotnet tool install -g Burner-CLI
 ```
 
 ## Features
