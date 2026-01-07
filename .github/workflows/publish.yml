@@ -3,7 +3,7 @@
 #git push origin v1.0.0
 # or use the "Run workflow" button to publish a specific version
 
-name: Publish to NuGet
+name: Publish NuGet
 
 on:
     push:

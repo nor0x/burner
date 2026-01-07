@@ -1,16 +1,27 @@
 # Burner 🔥
 
-<img src="Art/icon_alpha.png" alt="Burner Logo" width="110" style="margin-bottom:20px"  />
+<p align="center">
+<img src="Art/icon_alpha.png" alt="Burner Logo" width="110" style="margin-bottom:20px" />
+</p>
+<p align="center">
+<strong>
+Spark ideas. Burn 🔥 when done. It's the home 🏡 for burner projects.
+</strong>
 
+</p>
+<p align="center">
+<a href="https://github.com/nor0x/burner/actions/workflows/ci.yml"><img src="https://github.com/nor0x/burner/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+<a href="https://github.com/nor0x/burner/actions/workflows/publish.yml"><img src="https://github.com/nor0x/burner/actions/workflows/publish.yml/badge.svg" alt="Publish NuGet" /></a>
+<a href="https://www.nuget.org/packages/Burner-CLI"><img src="https://img.shields.io/nuget/v/Burner-CLI.svg" alt="NuGet" /></a>
+<a href="https://www.nuget.org/packages/Burner-CLI"><img src="https://img.shields.io/nuget/dt/Burner-CLI.svg" alt="NuGet Downloads" /></a>
+</p>
 
-[![CI](https://github.com/nor0x/burner/actions/workflows/ci.yml/badge.svg)](https://github.com/nor0x/burner/actions/workflows/ci.yml)
-[![Publish to NuGet](https://github.com/nor0x/burner/actions/workflows/publish.yml/badge.svg)](https://github.com/nor0x/burner/actions/workflows/publish.yml)
-[![NuGet](https://img.shields.io/nuget/v/Burner-CLI.svg)](https://www.nuget.org/packages/Burner-CLI)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/Burner-CLI.svg)](https://www.nuget.org/packages/Burner-CLI)
-
+<p align="center">
+<em>
 A CLI tool to create and manage temporary dev projects for quick experiments.
+</em>
+</p>
 
-*Spark ideas. Burn when done.*
 
 
 ## Installation
