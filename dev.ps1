@@ -4,7 +4,8 @@
 param(
 	[switch]$SkipInstall,
 	[switch]$Uninstall,
-	[switch]$Run
+	[switch]$Run,
+	[switch]$Test
 )
 
 $ErrorActionPreference = "Stop"
@@ -62,23 +63,25 @@ else {
 Write-Host ""
 
 # Run test commands
-Write-Host "5️⃣  Running test commands...`n" -ForegroundColor Cyan
+if ($Test) {
+	Write-Host "5️⃣  Running test commands...`n" -ForegroundColor Cyan
 
-Write-Host ">>> burner --help" -ForegroundColor DarkGray
-burner --help
-Write-Host ""
+	Write-Host ">>> burner --help" -ForegroundColor DarkGray
+	burner --help
+	Write-Host ""
 
-Write-Host ">>> burner config" -ForegroundColor DarkGray
-burner config
-Write-Host ""
+	Write-Host ">>> burner config" -ForegroundColor DarkGray
+	burner config
+	Write-Host ""
 
-Write-Host ">>> burner templates" -ForegroundColor DarkGray
-burner templates
-Write-Host ""
+	Write-Host ">>> burner templates" -ForegroundColor DarkGray
+	burner templates
+	Write-Host ""
 
-Write-Host ">>> burner list" -ForegroundColor DarkGray
-burner list
-Write-Host ""
+	Write-Host ">>> burner list" -ForegroundColor DarkGray
+	burner list
+	Write-Host ""
+}
 
 Write-Host "`n✅ Local testing complete!`n" -ForegroundColor Green
 Write-Host "Try these commands:" -ForegroundColor Yellow

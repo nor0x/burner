@@ -58,11 +58,12 @@ dotnet tool install -g Burner-CLI
 
 ## Commands
 
-### `burner new <template> <name>`
+### `burner new <template> [name]`
 
-Create a new project from a template.
+Create a new project from a template. Name is auto-generated if not provided.
 
 ```bash
+burner new dotnet                    # Auto-name: dotnet-HHMMSS
 burner new dotnet my-experiment      # Create .NET console app
 burner new web quick-test            # Create HTML/JS/CSS project
 burner new react my-app -d ~/code    # Use custom directory
@@ -142,7 +143,7 @@ burner stats    # Overview, projects by template, age distribution
 
 Extend Burner with your own templates by adding executable scripts to the `templates` directory.
 
-### Requirements
+### Template Requirements
 
 - Scripts can be written in any language (bash, PowerShell, Python, etc.)
 - Must be executable from the command line
@@ -152,15 +153,17 @@ Extend Burner with your own templates by adding executable scripts to the `templ
 
 | Argument | Description |
 |----------|-------------|
-| `$1`     | Project name |
-| `$2`     | Target directory (uses configured default if not provided) |
+| *(template alias)* | Template name is derived from the script filename (e.g., `react.ps1` → `react`) |
+| `$1`     | Project name (auto-generated as `{template}-HHMMSS` if not provided by user) |
+| `$2`     | Target directory (uses configured burner home if not provided) |
 
 ### Example
 
 A template script named `react.ps1` in the templates directory would be invoked as:
 
-```
-burner new react my-experiment
+```bash
+burner new react                # Name auto-generated: react-143052
+burner new react my-experiment  # Name: my-experiment
 ```
 
 ## Configuration

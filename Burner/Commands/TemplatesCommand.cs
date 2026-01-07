@@ -12,30 +12,29 @@ public class TemplatesCommand : Command
 		var config = BurnerConfig.Load();
 		var templateService = new TemplateService(config);
 
-		var templates = templateService.GetAvailableTemplates().ToList();
+		ShowTemplatesTable(templateService, config);
+
+		return 0;
+	}
+
+	public static void ShowTemplatesTable(TemplateService templateService, BurnerConfig config)
+	{
+		var templates = templateService.GetAvailableTemplatesWithDetails().ToList();
 
 		AnsiConsole.WriteLine();
 		AnsiConsole.Write(Banner.CreateRule(":fire: Templates"));
 		AnsiConsole.WriteLine();
 
-		var table = Banner.CreateTable("Template", "Type");
-
-		var builtIn = new[] { "dotnet", "web" };
+		var table = Banner.CreateTable("Template", "Filename", "Type");
 
 		foreach (var template in templates)
 		{
-			var type = builtIn.Contains(template) ? "[green]built-in[/]" : "[blue]custom[/]";
-			table.AddRow(template, type);
+			var type = template.IsBuiltIn ? "[green]built-in[/]" : "[blue]custom[/]";
+			table.AddRow(template.Name, $"[grey]{template.Filename}[/]", type);
 		}
 
 		AnsiConsole.Write(table);
 
-		if (!Directory.Exists(config.BurnerTemplates))
-		{
-			AnsiConsole.MarkupLine($"\n[grey]Burner templates directory:[/] {config.BurnerTemplates}");
-			AnsiConsole.MarkupLine("[grey]Create this directory and add scripts to define custom templates.[/]");
-		}
-
-		return 0;
+		AnsiConsole.MarkupLine($"\n[grey]Templates directory:[/] [dim]{config.BurnerTemplates}[/]");
 	}
 }

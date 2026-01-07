@@ -12,7 +12,7 @@ public class BurnerConfig
 
 	[JsonPropertyName("burnerHome")]
 	public string BurnerHome { get; set; } = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".burner", "projects");
+		Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".burner", "projects");
 	public string BurnerTemplates { get; set; } = Path.Combine(
 		Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".burner", "templates");
 

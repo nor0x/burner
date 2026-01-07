@@ -14,6 +14,7 @@ app.Configure(config =>
 
 	config.AddCommand<NewCommand>("new")
 		.WithDescription("Create a new burner project")
+		.WithExample("new", "dotnet")
 		.WithExample("new", "dotnet", "my-experiment")
 		.WithExample("new", "web", "quick-test", "-d", "C:\\Projects");
 
