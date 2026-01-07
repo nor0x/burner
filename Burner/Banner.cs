@@ -1,3 +1,4 @@
+using System.Reflection;
 using Spectre.Console;
 
 namespace Burner;
@@ -13,11 +14,16 @@ public static class Banner
         [bold red]╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝[/]
         """;
 
+	public static string Version => Assembly.GetExecutingAssembly()
+		.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion?.Split('+')[0]
+		?? Assembly.GetExecutingAssembly().GetName().Version?.ToString()
+		?? "1.0.0";
+
 	public static void Show()
 	{
 		AnsiConsole.WriteLine();
 		AnsiConsole.Markup(LogoText);
-		AnsiConsole.MarkupLine("  :fire:");
+		AnsiConsole.MarkupLine($"  :fire: [grey]v{Version}[/]");
 		AnsiConsole.WriteLine();
 		AnsiConsole.MarkupLine("[grey]Spark ideas. Burn :fire: when done. It's the home :house_with_garden: for burner projects.[/]");
 		AnsiConsole.WriteLine();
