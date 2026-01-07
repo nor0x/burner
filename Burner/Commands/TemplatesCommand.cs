@@ -15,7 +15,7 @@ public class TemplatesCommand : Command
 		var templates = templateService.GetAvailableTemplates().ToList();
 
 		AnsiConsole.WriteLine();
-		AnsiConsole.Write(Banner.CreateRule("🔥 Templates"));
+		AnsiConsole.Write(Banner.CreateRule(":fire: Templates"));
 		AnsiConsole.WriteLine();
 
 		var table = Banner.CreateTable("Template", "Type");

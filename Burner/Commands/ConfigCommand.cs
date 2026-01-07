@@ -104,7 +104,7 @@ public class ConfigCommand : Command<ConfigCommandSettings>
 	private void ShowConfig(BurnerConfig config)
 	{
 		AnsiConsole.WriteLine();
-		AnsiConsole.Write(Banner.CreateRule("🔥 Configuration"));
+		AnsiConsole.Write(Banner.CreateRule(":fire: Configuration"));
 		AnsiConsole.WriteLine();
 
 		var table = Banner.CreateTable("Setting", "Value");

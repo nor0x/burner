@@ -47,7 +47,7 @@ public class NewCommand : Command<NewCommandSettings>
 				{
 					var projectName = $"{DateTime.Now:yyMMdd}-{settings.Name}";
 					var projectPath = Path.Combine(settings.Directory ?? config.BurnerHome, projectName);
-					AnsiConsole.MarkupLine($"[green]🔥[/] Project created at [blue]{projectPath}[/]");
+					AnsiConsole.MarkupLine($"[green]:fire:[/] Project created at [blue]{projectPath}[/]");
 				}
 				else
 				{

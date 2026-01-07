@@ -56,7 +56,7 @@ public class BurnCommand : Command<BurnCommandSettings>
 		{
 			AnsiConsole.WriteLine();
 			var panel = new Panel("[grey]No burner projects to delete.[/]")
-				.Header("[orangered1]🔥 Burn[/]")
+				.Header(Emoji.Replace("[orangered1]:fire: Burn[/]"))
 				.Border(BoxBorder.Rounded)
 				.BorderStyle(Style.Parse("grey"));
 			AnsiConsole.Write(panel);
@@ -64,7 +64,7 @@ public class BurnCommand : Command<BurnCommandSettings>
 		}
 
 		AnsiConsole.WriteLine();
-		AnsiConsole.Write(Banner.CreateRule("🔥 Select Projects to Burn"));
+		AnsiConsole.Write(Banner.CreateRule(":fire: Select Projects to Burn"));
 		AnsiConsole.WriteLine();
 
 		var selected = AnsiConsole.Prompt(
@@ -104,7 +104,7 @@ public class BurnCommand : Command<BurnCommandSettings>
 		AnsiConsole.MarkupLine($"[yellow]Selected {projectNames.Count} project(s) for deletion:[/]");
 		foreach (var name in projectNames)
 		{
-			AnsiConsole.MarkupLine($"  [orangered1]🔥[/] [blue]{name}[/]");
+			AnsiConsole.MarkupLine($"  [orangered1]:fire:[/] [blue]{name}[/]");
 		}
 
 		var confirm = AnsiConsole.Confirm($"\n[orangered1]Permanently delete these projects?[/]", defaultValue: false);
@@ -129,7 +129,7 @@ public class BurnCommand : Command<BurnCommandSettings>
 				}
 			});
 
-		AnsiConsole.MarkupLine($"\n[green]🔥[/] Burned [orangered1]{deleted}[/] project(s)");
+		AnsiConsole.MarkupLine($"\n[green]:fire:[/] Burned [orangered1]{deleted}[/] project(s)");
 		return 0;
 	}
 

@@ -26,7 +26,7 @@ public class ListCommand : Command<ListCommandSettings>
 		{
 			AnsiConsole.WriteLine();
 			var panel = new Panel("[grey]No burner projects found.\nCreate one with:[/] [yellow]burner new <template> <name>[/]")
-				.Header("[orangered1]🔥 Projects[/]")
+				.Header(Emoji.Replace("[orangered1]:fire: Projects[/]"))
 				.Border(BoxBorder.Rounded)
 				.BorderStyle(Style.Parse("grey"));
 			AnsiConsole.Write(panel);
@@ -76,7 +76,7 @@ public class ListCommand : Command<ListCommandSettings>
 		}
 
 		AnsiConsole.WriteLine();
-		AnsiConsole.Write(Banner.CreateRule("🔥 Projects"));
+		AnsiConsole.Write(Banner.CreateRule(":fire: Projects"));
 		AnsiConsole.WriteLine();
 		AnsiConsole.Write(table);
 		AnsiConsole.MarkupLine($"\n[grey]Total:[/] [orangered1]{projects.Count}[/] [grey]project(s)[/]");
