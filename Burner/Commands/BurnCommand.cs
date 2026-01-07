@@ -23,6 +23,10 @@ public class BurnCommandSettings : CommandSettings
 	[CommandOption("-i|--interactive")]
 	[Description("Interactive mode: select projects to delete")]
 	public bool Interactive { get; set; }
+
+	[CommandOption("-a|--all")]
+	[Description("Delete ALL burner projects")]
+	public bool All { get; set; }
 }
 
 public class BurnCommand : Command<BurnCommandSettings>
@@ -31,6 +35,12 @@ public class BurnCommand : Command<BurnCommandSettings>
 	{
 		var config = BurnerConfig.Load();
 		var projectService = new ProjectService(config);
+
+		// Burn all projects
+		if (settings.All)
+		{
+			return BurnAll(projectService, settings.Force);
+		}
 
 		// Interactive mode
 		if (settings.Interactive)
@@ -203,6 +213,53 @@ public class BurnCommand : Command<BurnCommandSettings>
 		var deleted = projectService.CleanupProjects(cleanupDays);
 		AnsiConsole.MarkupLine($"[green]✓[/] Deleted {deleted} project(s)");
 
+		return 0;
+	}
+
+	private int BurnAll(ProjectService projectService, bool force)
+	{
+		var projects = projectService.GetAllProjects().ToList();
+
+		if (projects.Count == 0)
+		{
+			AnsiConsole.MarkupLine("[grey]No burner projects to delete.[/]");
+			return 0;
+		}
+
+		AnsiConsole.MarkupLine($"[yellow]Found {projects.Count} project(s):[/]");
+		foreach (var project in projects)
+		{
+			AnsiConsole.MarkupLine($"  [orangered1]:fire:[/] [blue]{project.Name}[/] [grey]({project.AgeInDays} days old)[/]");
+		}
+
+		if (!force)
+		{
+			AnsiConsole.WriteLine();
+			AnsiConsole.MarkupLine("[bold red]WARNING: This will permanently delete ALL burner projects![/]");
+			var confirm = AnsiConsole.Confirm($"[orangered1]Delete all {projects.Count} project(s)?[/]", defaultValue: false);
+			if (!confirm)
+			{
+				AnsiConsole.MarkupLine("[grey]Cancelled.[/]");
+				return 0;
+			}
+		}
+
+		var deleted = 0;
+		AnsiConsole.Status()
+			.Spinner(Spinner.Known.Aesthetic)
+			.SpinnerStyle(Style.Parse("orangered1"))
+			.Start("[orangered1]Burning all projects...[/]", ctx =>
+			{
+				foreach (var project in projects)
+				{
+					if (projectService.DeleteProject(project.Name))
+					{
+						deleted++;
+					}
+				}
+			});
+
+		AnsiConsole.MarkupLine($"\n[green]:fire:[/] Burned [orangered1]{deleted}[/] project(s)");
 		return 0;
 	}
 }

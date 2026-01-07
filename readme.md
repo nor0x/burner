@@ -88,6 +88,8 @@ burner burn my-experiment     # Delete specific project
 burner burn --days 30         # Delete projects older than 30 days
 burner burn -f --days 7       # Force delete without confirmation
 burner burn -i                # Interactive mode: select from list
+burner burn --all             # Delete ALL projects
+burner burn --all -f          # Delete ALL projects without confirmation
 ```
 
 ### `burner open [name]`

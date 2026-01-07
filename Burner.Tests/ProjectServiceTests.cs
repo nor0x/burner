@@ -139,4 +139,64 @@ public class ProjectServiceTests : IDisposable
 
 		Assert.Equal(0, deleted);
 	}
+
+	[Fact]
+	public void DeleteAllProjects_RemovesAllProjects()
+	{
+		Directory.CreateDirectory(Path.Combine(_testDir, "260101-project1"));
+		Directory.CreateDirectory(Path.Combine(_testDir, "260102-project2"));
+		Directory.CreateDirectory(Path.Combine(_testDir, "260103-project3"));
+
+		var projects = _service.GetAllProjects().ToList();
+		Assert.Equal(3, projects.Count);
+
+		var deleted = 0;
+		foreach (var project in projects)
+		{
+			if (_service.DeleteProject(project.Name))
+				deleted++;
+		}
+
+		Assert.Equal(3, deleted);
+		Assert.Empty(_service.GetAllProjects());
+	}
+
+	[Fact]
+	public void DeleteAllProjects_ReturnsZero_WhenNoProjects()
+	{
+		var projects = _service.GetAllProjects().ToList();
+		Assert.Empty(projects);
+
+		var deleted = 0;
+		foreach (var project in projects)
+		{
+			if (_service.DeleteProject(project.Name))
+				deleted++;
+		}
+
+		Assert.Equal(0, deleted);
+	}
+
+	[Fact]
+	public void DeleteAllProjects_HandlesProjectsWithFiles()
+	{
+		var project1 = Path.Combine(_testDir, "260101-with-files");
+		var project2 = Path.Combine(_testDir, "260102-with-nested");
+
+		Directory.CreateDirectory(project1);
+		File.WriteAllText(Path.Combine(project1, "file.txt"), "content");
+
+		Directory.CreateDirectory(Path.Combine(project2, "subfolder"));
+		File.WriteAllText(Path.Combine(project2, "subfolder", "nested.txt"), "nested");
+
+		var projects = _service.GetAllProjects().ToList();
+		foreach (var project in projects)
+		{
+			_service.DeleteProject(project.Name);
+		}
+
+		Assert.False(Directory.Exists(project1));
+		Assert.False(Directory.Exists(project2));
+		Assert.Empty(_service.GetAllProjects());
+	}
 }
