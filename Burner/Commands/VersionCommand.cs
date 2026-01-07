@@ -34,9 +34,6 @@ public class VersionCommand : Command
 		AnsiConsole.Write(table);
 		AnsiConsole.WriteLine();
 
-		AnsiConsole.MarkupLine("[grey]Spark ideas. Burn :fire: when done. It's the home :house_with_garden: for burner projects.[/]");
-		AnsiConsole.WriteLine();
-
 		return 0;
 	}
 }
