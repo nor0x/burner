@@ -35,7 +35,22 @@ jobs:
               run: dotnet build -c Release --no-restore
 
             - name: Test
-              run: dotnet test -c Release --no-build --verbosity normal
+              run: dotnet test -c Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
+
+            - name: Upload test results
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: test-results-${{ matrix.os }}
+                  path: ./TestResults/*.trx
+
+            - name: Publish test results
+              uses: dorny/test-reporter@v1
+              if: always() && matrix.os == 'ubuntu-latest'
+              with:
+                  name: Test Results
+                  path: ./TestResults/*.trx
+                  reporter: dotnet-trx
 
             - name: Pack (verify)
               run: dotnet pack Burner/Burner.csproj -c Release --no-build -o ./artifacts
