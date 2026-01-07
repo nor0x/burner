@@ -1,7 +1,7 @@
 # Burner 🔥
 
 <p align="center">
-<img src="Art/icon_alpha.png" alt="Burner Logo" width="110" style="margin-bottom:20px" />
+<img src="Art/icon_alpha.png" alt="Burner Logo" width="170" style="margin-bottom:20px" />
 </p>
 <p align="center">
 <strong>
