@@ -168,8 +168,10 @@ The working directory is automatically set to `BURNER_PATH`, so you can create f
 **PowerShell (`react.ps1`):**
 ```powershell
 #!/usr/bin/env pwsh
-# Creates a React app using Vite
-npm create vite@latest . -- --template react
+# react.ps1 - Creates a React app using Vite
+Set-Location $env:BURNER_PATH
+echo "y" | npm create vite@latest $env:BURNER_DATED_NAME -y -- --template react --no-rolldown
+Set-Location $env:BURNER_DATED_NAME
 npm install
 ```
 
