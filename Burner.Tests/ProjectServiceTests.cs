@@ -1,0 +1,142 @@
+using Burner.Models;
+using Burner.Services;
+
+namespace Burner.Tests;
+
+public class ProjectServiceTests : IDisposable
+{
+	private readonly string _testDir;
+	private readonly BurnerConfig _config;
+	private readonly ProjectService _service;
+
+	public ProjectServiceTests()
+	{
+		_testDir = Path.Combine(Path.GetTempPath(), $"burner-test-{Guid.NewGuid()}");
+		Directory.CreateDirectory(_testDir);
+
+		_config = new BurnerConfig
+		{
+			BurnerHome = _testDir,
+			AutoCleanDays = 30
+		};
+		_service = new ProjectService(_config);
+	}
+
+	public void Dispose()
+	{
+		if (Directory.Exists(_testDir))
+		{
+			Directory.Delete(_testDir, recursive: true);
+		}
+	}
+
+	[Fact]
+	public void GetAllProjects_ReturnsEmpty_WhenNoProjects()
+	{
+		var projects = _service.GetAllProjects();
+
+		Assert.Empty(projects);
+	}
+
+	[Fact]
+	public void GetAllProjects_ReturnsProjects_WhenDirectoriesExist()
+	{
+		Directory.CreateDirectory(Path.Combine(_testDir, "260107-project1"));
+		Directory.CreateDirectory(Path.Combine(_testDir, "260108-project2"));
+
+		var projects = _service.GetAllProjects().ToList();
+
+		Assert.Equal(2, projects.Count);
+	}
+
+	[Fact]
+	public void GetAllProjects_OrdersByDateDescending()
+	{
+		Directory.CreateDirectory(Path.Combine(_testDir, "260105-older"));
+		Directory.CreateDirectory(Path.Combine(_testDir, "260110-newer"));
+
+		var projects = _service.GetAllProjects().ToList();
+
+		Assert.Equal("260110-newer", projects[0].Name);
+		Assert.Equal("260105-older", projects[1].Name);
+	}
+
+	[Fact]
+	public void GetProject_FindsByExactName()
+	{
+		Directory.CreateDirectory(Path.Combine(_testDir, "260107-my-app"));
+
+		var project = _service.GetProject("260107-my-app");
+
+		Assert.NotNull(project);
+		Assert.Equal("260107-my-app", project.Name);
+	}
+
+	[Fact]
+	public void GetProject_FindsByPartialName()
+	{
+		Directory.CreateDirectory(Path.Combine(_testDir, "260107-my-app"));
+
+		var project = _service.GetProject("my-app");
+
+		Assert.NotNull(project);
+		Assert.Equal("260107-my-app", project.Name);
+	}
+
+	[Fact]
+	public void GetProject_ReturnsNull_WhenNotFound()
+	{
+		var project = _service.GetProject("nonexistent");
+
+		Assert.Null(project);
+	}
+
+	[Fact]
+	public void DeleteProject_RemovesDirectory()
+	{
+		var projectPath = Path.Combine(_testDir, "260107-to-delete");
+		Directory.CreateDirectory(projectPath);
+		File.WriteAllText(Path.Combine(projectPath, "file.txt"), "content");
+
+		var result = _service.DeleteProject("to-delete");
+
+		Assert.True(result);
+		Assert.False(Directory.Exists(projectPath));
+	}
+
+	[Fact]
+	public void DeleteProject_ReturnsFalse_WhenNotFound()
+	{
+		var result = _service.DeleteProject("nonexistent");
+
+		Assert.False(result);
+	}
+
+	[Fact]
+	public void CleanupProjects_RemovesOldProjects()
+	{
+		// Create a project with an old date in the name
+		var oldProjectPath = Path.Combine(_testDir, "240101-very-old");
+		Directory.CreateDirectory(oldProjectPath);
+
+		// Create a recent project
+		var newProjectPath = Path.Combine(_testDir, $"{DateTime.Now:yyMMdd}-new");
+		Directory.CreateDirectory(newProjectPath);
+
+		var deleted = _service.CleanupProjects(days: 30);
+
+		Assert.True(deleted >= 1);
+		Assert.False(Directory.Exists(oldProjectPath));
+		Assert.True(Directory.Exists(newProjectPath));
+	}
+
+	[Fact]
+	public void CleanupProjects_ReturnsZero_WhenDisabled()
+	{
+		Directory.CreateDirectory(Path.Combine(_testDir, "240101-old"));
+
+		var deleted = _service.CleanupProjects(days: 0);
+
+		Assert.Equal(0, deleted);
+	}
+}

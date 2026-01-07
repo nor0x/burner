@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Burner.Tests/Burner.Tests.csproj" />
+  <Project Path="Burner/Burner.csproj" />
+</Solution>
