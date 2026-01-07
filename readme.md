@@ -1,13 +1,14 @@
 # Burner 🔥
 
-
-<img src="Art/icon_alpha.png" alt="Burner Logo" width="128" align="right" />
+<img src="Art/icon_alpha.png" alt="Burner Logo" width="90" align="right" />
 
 
 
 A CLI tool to create and manage temporary dev projects for quick experiments.
 
 *Spark ideas. Burn when done.*
+
+
 
 ## Installation
 
