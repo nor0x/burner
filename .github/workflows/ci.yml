@@ -49,13 +49,15 @@ jobs:
                   name: test-results-${{ matrix.os }}
                   path: ./TestResults/*.trx
 
-            - name: Publish test results
-              uses: dorny/test-reporter@v1
-              if: always() && matrix.os == 'ubuntu-latest'
+            - name: Test report summary
+              uses: phoenix-actions/test-reporting@v15
+              if: always()
               with:
-                  name: Test Results
+                  name: Tests (${{ matrix.os }})
                   path: ./TestResults/*.trx
                   reporter: dotnet-trx
+                  output-to: step-summary
+                  fail-on-error: false
 
             - name: Pack (verify)
               run: dotnet pack Burner/Burner.csproj -c Release --no-build -o ./artifacts
