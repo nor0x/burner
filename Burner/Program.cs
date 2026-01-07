@@ -1,5 +1,9 @@
 ﻿using Burner.Commands;
 using Spectre.Console.Cli;
+using System.Text;
+
+// Enable UTF-8 output for emoji support
+Console.OutputEncoding = Encoding.UTF8;
 
 var app = new CommandApp<WelcomeCommand>();
 
