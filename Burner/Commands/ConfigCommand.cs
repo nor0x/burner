@@ -20,6 +20,10 @@ public class ConfigCommandSettings : CommandSettings
 	[Description("Set auto-cleanup age in days (0 to disable)")]
 	public int? AutoCleanDays { get; set; }
 
+	[CommandOption("--editor <EDITOR>")]
+	[Description("Set the default editor command (e.g., code, cursor, rider)")]
+	public string? Editor { get; set; }
+
 	[CommandOption("--show")]
 	[Description("Show current configuration")]
 	public bool Show { get; set; }
@@ -87,6 +91,13 @@ public class ConfigCommand : Command<ConfigCommandSettings>
 				AnsiConsole.MarkupLine($"[green]✓[/] Disabled auto-clean");
 		}
 
+		if (settings.Editor != null)
+		{
+			config.Editor = settings.Editor;
+			hasChanges = true;
+			AnsiConsole.MarkupLine($"[green]✓[/] Set editor to [blue]{config.Editor}[/]");
+		}
+
 		if (hasChanges)
 		{
 			config.Save();
@@ -111,6 +122,7 @@ public class ConfigCommand : Command<ConfigCommandSettings>
 
 		table.AddRow("[white]Burner Home[/]", $"[blue]{config.BurnerHome}[/]");
 		table.AddRow("[white]Burner Templates[/]", $"[blue]{config.BurnerTemplates}[/]");
+		table.AddRow("[white]Editor[/]", $"[blue]{config.Editor}[/]");
 		table.AddRow("[white]Auto-Clean Days[/]", config.AutoCleanDays > 0
 			? $"[yellow]{config.AutoCleanDays}[/]"
 			: "[grey]disabled[/]");

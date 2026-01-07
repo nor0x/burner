@@ -19,6 +19,9 @@ public class BurnerConfig
 	[JsonPropertyName("autoCleanDays")]
 	public int AutoCleanDays { get; set; } = 30;
 
+	[JsonPropertyName("editor")]
+	public string Editor { get; set; } = "code";
+
 	public static BurnerConfig Load()
 	{
 		if (!File.Exists(ConfigPath))

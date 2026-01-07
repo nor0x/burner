@@ -32,6 +32,8 @@ app.Configure(config =>
 
 	config.AddCommand<OpenCommand>("open")
 		.WithDescription("Open a project directory")
+		.WithExample("open")
+		.WithExample("open", "-i")
 		.WithExample("open", "my-experiment")
 		.WithExample("open", "my-experiment", "-c")
 		.WithExample("open", "my-experiment", "-e");
@@ -47,6 +49,10 @@ app.Configure(config =>
 
 	config.AddCommand<StatsCommand>("stats")
 		.WithDescription("Show project statistics and charts");
+
+	config.AddCommand<VersionCommand>("version")
+		.WithAlias("v")
+		.WithDescription("Show version and info about Burner");
 });
 
 return app.Run(args);

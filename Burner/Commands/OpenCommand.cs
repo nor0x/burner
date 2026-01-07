@@ -9,17 +9,21 @@ namespace Burner.Commands;
 
 public class OpenCommandSettings : CommandSettings
 {
-	[CommandArgument(0, "<NAME>")]
-	[Description("Project name to open")]
-	public string Name { get; set; } = string.Empty;
+	[CommandArgument(0, "[NAME]")]
+	[Description("Project name to open (optional, interactive if not provided)")]
+	public string? Name { get; set; }
 
 	[CommandOption("-e|--explorer")]
 	[Description("Open in file explorer instead of terminal")]
 	public bool Explorer { get; set; }
 
 	[CommandOption("-c|--code")]
-	[Description("Open in VS Code")]
+	[Description("Open in editor (uses configured editor)")]
 	public bool Code { get; set; }
+
+	[CommandOption("-i|--interactive")]
+	[Description("Interactive mode: select project from list")]
+	public bool Interactive { get; set; }
 }
 
 public class OpenCommand : Command<OpenCommandSettings>
@@ -28,6 +32,12 @@ public class OpenCommand : Command<OpenCommandSettings>
 	{
 		var config = BurnerConfig.Load();
 		var projectService = new ProjectService(config);
+
+		// Interactive mode if no name provided or -i flag
+		if (string.IsNullOrEmpty(settings.Name) || settings.Interactive)
+		{
+			return InteractiveOpen(projectService, config);
+		}
 
 		var project = projectService.GetProject(settings.Name);
 		if (project == null)
@@ -55,7 +65,7 @@ public class OpenCommand : Command<OpenCommandSettings>
 
 		if (settings.Code)
 		{
-			OpenInVSCode(project.Path);
+			OpenInEditor(project.Path, config.Editor);
 		}
 		else if (settings.Explorer)
 		{
@@ -70,21 +80,100 @@ public class OpenCommand : Command<OpenCommandSettings>
 		return 0;
 	}
 
-	private void OpenInVSCode(string path)
+	private int InteractiveOpen(ProjectService projectService, BurnerConfig config)
+	{
+		var projects = projectService.GetAllProjects().ToList();
+
+		if (projects.Count == 0)
+		{
+			AnsiConsole.WriteLine();
+			var panel = new Panel("[grey]No burner projects found.\nCreate one with:[/] [yellow]burner new <template> <name>[/]")
+				.Header(Emoji.Replace("[orangered1]:fire: Open[/]"))
+				.Border(BoxBorder.Rounded)
+				.BorderStyle(Style.Parse("grey"));
+			AnsiConsole.Write(panel);
+			return 0;
+		}
+
+		AnsiConsole.WriteLine();
+		AnsiConsole.Write(Banner.CreateRule(":fire: Select Project to Open"));
+		AnsiConsole.WriteLine();
+
+		// Select project
+		var projectChoices = projects.Select(p =>
+		{
+			var ageColor = p.AgeInDays switch
+			{
+				< 7 => "green",
+				< 30 => "yellow",
+				_ => "red"
+			};
+			var ageText = p.AgeInDays switch
+			{
+				0 => "today",
+				1 => "1 day",
+				_ => $"{p.AgeInDays} days"
+			};
+			return $"{p.Name} [{ageColor}]({ageText})[/] [grey]- {p.Template}[/]";
+		}).ToList();
+
+		var selected = AnsiConsole.Prompt(
+			new SelectionPrompt<string>()
+				.Title("[orangered1]Select a project:[/]")
+				.PageSize(15)
+				.HighlightStyle(Style.Parse("orangered1"))
+				.AddChoices(projectChoices));
+
+		// Extract project name
+		var projectName = selected.Split(' ')[0];
+		var project = projects.First(p => p.Name == projectName);
+
+		AnsiConsole.WriteLine();
+
+		// Select action
+		var action = AnsiConsole.Prompt(
+			new SelectionPrompt<string>()
+				.Title($"[orangered1]How do you want to open[/] [blue]{project.Name}[/][orangered1]?[/]")
+				.HighlightStyle(Style.Parse("orangered1"))
+				.AddChoices(new[]
+				{
+					$":pencil: Open in editor ({config.Editor})",
+					":file_folder: Open in file explorer",
+					":clipboard: Copy path to clipboard"
+				}));
+
+		if (action.Contains("editor"))
+		{
+			OpenInEditor(project.Path, config.Editor);
+		}
+		else if (action.Contains("explorer"))
+		{
+			OpenInExplorer(project.Path);
+		}
+		else
+		{
+			// Copy to clipboard
+			CopyToClipboard(project.Path);
+		}
+
+		return 0;
+	}
+
+	private void OpenInEditor(string path, string editor)
 	{
 		try
 		{
 			Process.Start(new ProcessStartInfo
 			{
-				FileName = "code",
+				FileName = editor,
 				Arguments = $"\"{path}\"",
 				UseShellExecute = true
 			});
-			AnsiConsole.MarkupLine($"[green]✓[/] Opened in VS Code: [blue]{path}[/]");
+			AnsiConsole.MarkupLine($"[green]✓[/] Opened in {editor}: [blue]{path}[/]");
 		}
 		catch
 		{
-			AnsiConsole.MarkupLine("[red]✗[/] Failed to open VS Code. Is it installed and in PATH?");
+			AnsiConsole.MarkupLine($"[red]✗[/] Failed to open {editor}. Is it installed and in PATH?");
 		}
 	}
 
@@ -103,6 +192,52 @@ public class OpenCommand : Command<OpenCommandSettings>
 		catch
 		{
 			AnsiConsole.MarkupLine("[red]✗[/] Failed to open file explorer");
+		}
+	}
+
+	private void CopyToClipboard(string path)
+	{
+		try
+		{
+			if (OperatingSystem.IsWindows())
+			{
+				Process.Start(new ProcessStartInfo
+				{
+					FileName = "cmd",
+					Arguments = $"/c echo {path}| clip",
+					UseShellExecute = false,
+					CreateNoWindow = true
+				})?.WaitForExit();
+			}
+			else if (OperatingSystem.IsMacOS())
+			{
+				Process.Start(new ProcessStartInfo
+				{
+					FileName = "pbcopy",
+					RedirectStandardInput = true,
+					UseShellExecute = false
+				});
+			}
+			else
+			{
+				// Linux - try xclip
+				var process = Process.Start(new ProcessStartInfo
+				{
+					FileName = "xclip",
+					Arguments = "-selection clipboard",
+					RedirectStandardInput = true,
+					UseShellExecute = false
+				});
+				process?.StandardInput.Write(path);
+				process?.StandardInput.Close();
+				process?.WaitForExit();
+			}
+			AnsiConsole.MarkupLine($"[green]✓[/] Copied to clipboard: [blue]{path}[/]");
+		}
+		catch
+		{
+			// Fallback: just print the path
+			AnsiConsole.MarkupLine($"[yellow]Path:[/] {path}");
 		}
 	}
 }

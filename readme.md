@@ -24,6 +24,24 @@ A CLI tool to create and manage temporary dev projects for quick experiments.
 
 
 
+## Requirements
+
+### For Users
+- [.NET 10.0](https://dotnet.microsoft.com/download) or later
+
+### For Development
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
+- [PowerShell](https://github.com/PowerShell/PowerShell) (for `dev.ps1` script)
+- Git
+
+### Dependencies
+- [Spectre.Console](https://spectreconsole.net/) 0.49.1 – Rich console UI
+- [Spectre.Console.Cli](https://spectreconsole.net/) 0.49.1 – Command-line parsing
+
+### Test Framework
+- [xUnit](https://xunit.net/) 2.9.3
+- [coverlet](https://github.com/coverlet-coverage/coverlet) 6.0.4
+
 ## Installation
 
 ```
@@ -71,13 +89,15 @@ burner burn -f --days 7       # Force delete without confirmation
 burner burn -i                # Interactive mode: select from list
 ```
 
-### `burner open <name>`
+### `burner open [name]`
 
-Open a project directory.
+Open a project directory. Interactive mode if no name provided.
 
 ```bash
+burner open                     # Interactive: select project and action
+burner open -i                  # Interactive mode (explicit)
 burner open my-experiment       # Print project path
-burner open my-experiment -c    # Open in VS Code
+burner open my-experiment -c    # Open in editor (uses configured editor)
 burner open my-experiment -e    # Open in file explorer
 ```
 
@@ -90,6 +110,7 @@ burner config                      # Show current config
 burner config --home ~/projects    # Set burner home directory
 burner config --templates ~/tpl    # Set templates directory
 burner config --auto-clean-days 60 # Set cleanup threshold
+burner config --editor cursor      # Set default editor (code, cursor, rider, etc.)
 burner config --open-home          # Open burner home in explorer
 burner config --open-templates     # Open templates dir in explorer
 ```
@@ -150,7 +171,8 @@ Burner can be configured via a config file located at `~/.burner/config.json`:
 {
   "burnerHome": "~/.burner/projects",
   "burnerTemplates": "~/.burner/templates",
-  "autoCleanDays": 30
+  "autoCleanDays": 30,
+  "editor": "code"
 }
 ```
 
@@ -159,4 +181,23 @@ Burner can be configured via a config file located at `~/.burner/config.json`:
 | `burnerHome` | Where new projects are created | `~/.burner/projects` |
 | `burnerTemplates` | Where custom template scripts are stored | `~/.burner/templates` |
 | `autoCleanDays` | Auto-remove projects older than this (0 to disable) | `30` |
+| `editor` | Default editor command for opening projects | `code` |
+
+## Development
+
+For local development and testing, use the `dev.ps1` script:
+
+```powershell
+# Full test: uninstall, pack, install, and run test commands
+./dev.ps1
+
+# Just uninstall the tool
+./dev.ps1 -Uninstall
+
+# Run without reinstalling
+./dev.ps1 -Run
+
+# Skip install, just run verification
+./dev.ps1 -SkipInstall
+```
 
