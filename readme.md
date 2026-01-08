@@ -21,7 +21,9 @@ Spark ideas. Burn 🔥 when done. It's the home 🏡 for burner projects.
 A CLI tool to create and manage temporary dev projects for quick experiments.
 </em>
 </p>
-
+<p align="center">
+<img src="Art/screenshot.jpg" alt="Burner Screenshot" width="600" style="margin-bottom:20px" />
+</p>
 
 
 ## Requirements
