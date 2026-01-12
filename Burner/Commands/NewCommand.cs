@@ -3,6 +3,7 @@ using Burner.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Burner.Commands;
 
@@ -19,6 +20,14 @@ public class NewCommandSettings : CommandSettings
 	[CommandOption("-d|--directory <PATH>")]
 	[Description("Target directory (uses default if not specified)")]
 	public string? Directory { get; set; }
+
+	[CommandOption("-e|--explorer")]
+	[Description("Open in file explorer after creation")]
+	public bool Explorer { get; set; }
+
+	[CommandOption("-c|--code")]
+	[Description("Open in editor after creation (uses configured editor)")]
+	public bool Code { get; set; }
 }
 
 public class NewCommand : Command<NewCommandSettings>
@@ -62,6 +71,15 @@ public class NewCommand : Command<NewCommandSettings>
 					var fullProjectName = $"{DateTime.Now:yyMMdd}-{projectName}";
 					var projectPath = Path.Combine(settings.Directory ?? config.BurnerHome, fullProjectName);
 					AnsiConsole.MarkupLine($"[green]:fire:[/] Project created at [blue]{projectPath}[/]");
+
+					if (settings.Code)
+					{
+						OpenInEditor(projectPath, config.Editor);
+					}
+					else if (settings.Explorer)
+					{
+						OpenInExplorer(projectPath);
+					}
 				}
 				else
 				{
@@ -70,5 +88,62 @@ public class NewCommand : Command<NewCommandSettings>
 			});
 
 		return 0;
+	}
+
+	private void OpenInEditor(string path, string editor)
+	{
+		try
+		{
+			Process.Start(new ProcessStartInfo
+			{
+				FileName = editor,
+				Arguments = $"\"{path}\"",
+				UseShellExecute = true
+			});
+			AnsiConsole.MarkupLine($"[green]✓[/] Opened in {editor}: [blue]{path}[/]");
+		}
+		catch
+		{
+			AnsiConsole.MarkupLine($"[red]✗[/] Failed to open {editor}. Is it installed and in PATH?");
+		}
+	}
+
+	private void OpenInExplorer(string path)
+	{
+		try
+		{
+			if (OperatingSystem.IsWindows())
+			{
+				Process.Start(new ProcessStartInfo
+				{
+					FileName = "explorer",
+					Arguments = $"\"{path}\"",
+					UseShellExecute = true
+				});
+			}
+			else if (OperatingSystem.IsMacOS())
+			{
+				Process.Start(new ProcessStartInfo
+				{
+					FileName = "open",
+					Arguments = $"\"{path}\"",
+					UseShellExecute = true
+				});
+			}
+			else
+			{
+				Process.Start(new ProcessStartInfo
+				{
+					FileName = "xdg-open",
+					Arguments = $"\"{path}\"",
+					UseShellExecute = true
+				});
+			}
+			AnsiConsole.MarkupLine($"[green]✓[/] Opened in file explorer: [blue]{path}[/]");
+		}
+		catch
+		{
+			AnsiConsole.MarkupLine("[red]✗[/] Failed to open file explorer");
+		}
 	}
 }
