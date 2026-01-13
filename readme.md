@@ -69,7 +69,10 @@ burner new dotnet                    # Auto-name: dotnet-HHMMSS
 burner new dotnet my-experiment      # Create .NET console app
 burner new web quick-test            # Create HTML/JS/CSS project
 burner new react my-app -d ~/code    # Use custom directory
+burner new svelte my-app -i          # Interactive mode for prompts
 ```
+
+> **Interactive Mode:** Some templates (like Vite-based ones) require user input during creation. Use `-i` or `--interactive` to enable interactive mode, or add `# BURNER_INTERACTIVE` to your template script for auto-detection.
 
 ### `burner list`
 
@@ -152,6 +155,7 @@ Extend Burner with your own templates by adding executable scripts to the `templ
 - Scripts can be written in any language (bash, PowerShell, Python, etc.)
 - Must be executable from the command line
 - Script filename becomes the template alias (e.g., `react.ps1` → `react`)
+- Add `# BURNER_INTERACTIVE` comment in the first 10 lines for templates requiring user input
 
 ### Environment Variables
 
@@ -175,6 +179,17 @@ Set-Location $env:BURNER_PATH
 echo "y" | npm create vite@latest $env:BURNER_DATED_NAME -y -- --template react --no-rolldown
 Set-Location $env:BURNER_DATED_NAME
 npm install
+```
+
+**PowerShell - Interactive (`svelte.ps1`):**
+```powershell
+#!/usr/bin/env pwsh
+# BURNER_INTERACTIVE
+# svelte.ps1 - Creates a Svelte app (auto-enables interactive mode)
+Set-Location $env:BURNER_PATH
+npm create vite@latest . -- --template svelte-ts
+npm install
+npm pkg set name=$env:BURNER_NAME
 ```
 
 **Bash (`react.sh`):**
