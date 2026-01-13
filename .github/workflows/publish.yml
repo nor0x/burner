@@ -6,68 +6,70 @@
 name: Publish NuGet
 
 on:
-    push:
-        tags:
-            - "v*"
-    workflow_dispatch:
-        inputs:
-            version:
-                description: "Version to publish (e.g., 1.0.0)"
-                required: true
-                type: string
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g., 1.0.0)"
+        required: true
+        type: string
 
 env:
-    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-    DOTNET_NOLOGO: true
-    DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
 jobs:
-    build-and-publish:
-        runs-on: ubuntu-latest
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v4
-              with:
-                  dotnet-version: "10.0.x"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
 
-            - name: Determine version
-              id: version
-              run: |
-                  if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-                    echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
-                  else
-                    # Extract version from tag (v1.0.0 -> 1.0.0)
-                    echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-                  fi
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            # Extract version from tag (v1.0.0 -> 1.0.0)
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          fi
 
-            - name: Restore dependencies
-              run: dotnet restore Burner/Burner.csproj
+      - name: Restore dependencies
+        run: dotnet restore Burner/Burner.csproj
 
-            - name: Build
-              run: dotnet build Burner/Burner.csproj -c Release --no-restore -p:Version=${{ steps.version.outputs.VERSION }}
+      - name: Build
+        run: dotnet build Burner/Burner.csproj -c Release --no-restore -p:Version=${{ steps.version.outputs.VERSION }}
 
-            - name: Run tests
-              run: dotnet test Burner.Tests/Burner.Tests.csproj -c Release --no-build --verbosity normal
+      - name: Run tests
+        run: dotnet test Burner.Tests/Burner.Tests.csproj -c Release --no-build --verbosity normal
 
-            - name: Pack
-              run: dotnet pack Burner/Burner.csproj -c Release --no-build -o ./artifacts -p:Version=${{ steps.version.outputs.VERSION }}
+      - name: Pack
+        run: dotnet pack Burner/Burner.csproj -c Release --no-build -o ./artifacts -p:Version=${{ steps.version.outputs.VERSION }}
 
-            - name: Upload artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                  name: nuget-package
-                  path: ./artifacts/*.nupkg
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ./artifacts/*.nupkg
 
-            - name: Publish to NuGet
-              run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Publish to NuGet
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
-            - name: Create GitHub Release
-              if: startsWith(github.ref, 'refs/tags/')
-              uses: softprops/action-gh-release@v1
-              with:
-                  files: ./artifacts/*.nupkg
-                  generate_release_notes: true
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./artifacts/*.nupkg
+          generate_release_notes: true
