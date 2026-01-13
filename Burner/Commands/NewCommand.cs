@@ -28,6 +28,10 @@ public class NewCommandSettings : CommandSettings
 	[CommandOption("-c|--code")]
 	[Description("Open in editor after creation (uses configured editor)")]
 	public bool Code { get; set; }
+
+	[CommandOption("-i|--interactive")]
+	[Description("Run template interactively (for templates requiring user input)")]
+	public bool Interactive { get; set; }
 }
 
 public class NewCommand : Command<NewCommandSettings>
@@ -60,34 +64,52 @@ public class NewCommand : Command<NewCommandSettings>
 		var projectName = settings.Name ?? $"{settings.Template}-{DateTime.Now:HHmmss}";
 
 		AnsiConsole.WriteLine();
-		AnsiConsole.Status()
-			.Spinner(Spinner.Known.Aesthetic)
-			.SpinnerStyle(Style.Parse("orangered1"))
-			.Start($"[orangered1]Igniting[/] [yellow]{settings.Template}[/] project [white]{projectName}[/]...", ctx =>
+
+		var fullProjectName = $"{DateTime.Now:yyMMdd}-{projectName}";
+		var projectPath = Path.Combine(settings.Directory ?? config.BurnerHome, fullProjectName);
+		bool success;
+
+		// Check if template requires interactive mode (via BURNER_INTERACTIVE marker)
+		var isInteractive = settings.Interactive || templateService.IsInteractiveTemplate(settings.Template);
+
+		if (isInteractive)
+		{
+			// Interactive mode: run without spinner to allow user input
+			AnsiConsole.MarkupLine($"[orangered1]Igniting[/] [yellow]{settings.Template}[/] project [white]{projectName}[/] [grey](interactive mode)[/]...");
+			AnsiConsole.WriteLine();
+			success = templateService.CreateProject(settings.Template, projectName, settings.Directory, interactive: true);
+		}
+		else
+		{
+			success = false;
+			AnsiConsole.Status()
+				.Spinner(Spinner.Known.Aesthetic)
+				.SpinnerStyle(Style.Parse("orangered1"))
+				.Start($"[orangered1]Igniting[/] [yellow]{settings.Template}[/] project [white]{projectName}[/]...", ctx =>
+				{
+					success = templateService.CreateProject(settings.Template, projectName, settings.Directory, interactive: false);
+				});
+		}
+
+		if (success)
+		{
+			AnsiConsole.MarkupLine($"[green]:fire:[/] Project created at [blue]{projectPath}[/]");
+
+			if (settings.Code)
 			{
-				var success = templateService.CreateProject(settings.Template, projectName, settings.Directory);
-				if (success)
-				{
-					var fullProjectName = $"{DateTime.Now:yyMMdd}-{projectName}";
-					var projectPath = Path.Combine(settings.Directory ?? config.BurnerHome, fullProjectName);
-					AnsiConsole.MarkupLine($"[green]:fire:[/] Project created at [blue]{projectPath}[/]");
+				OpenInEditor(projectPath, config.Editor);
+			}
+			else if (settings.Explorer)
+			{
+				OpenInExplorer(projectPath);
+			}
+		}
+		else
+		{
+			AnsiConsole.MarkupLine("[red]✗[/] Failed to create project");
+		}
 
-					if (settings.Code)
-					{
-						OpenInEditor(projectPath, config.Editor);
-					}
-					else if (settings.Explorer)
-					{
-						OpenInExplorer(projectPath);
-					}
-				}
-				else
-				{
-					AnsiConsole.MarkupLine("[red]✗[/] Failed to create project");
-				}
-			});
-
-		return 0;
+		return success ? 0 : 1;
 	}
 
 	private void OpenInEditor(string path, string editor)

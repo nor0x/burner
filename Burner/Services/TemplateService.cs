@@ -58,7 +58,29 @@ public class TemplateService
 		return templates.DistinctBy(t => t.Name);
 	}
 
-	public bool CreateProject(string template, string name, string? targetDirectory = null)
+	/// <summary>
+	/// Checks if a template requires interactive mode by looking for BURNER_INTERACTIVE marker.
+	/// </summary>
+	public bool IsInteractiveTemplate(string template)
+	{
+		EnsureBuiltInTemplatesExist();
+		var scriptPath = FindTemplateScript(template);
+		if (scriptPath == null) return false;
+
+		try
+		{
+			var content = File.ReadAllText(scriptPath);
+			// Look for BURNER_INTERACTIVE marker in first few lines
+			var lines = content.Split('\n').Take(10);
+			return lines.Any(line => line.Contains("BURNER_INTERACTIVE", StringComparison.OrdinalIgnoreCase));
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
+	public bool CreateProject(string template, string name, string? targetDirectory = null, bool interactive = false)
 	{
 		var projectDir = targetDirectory ?? _config.BurnerHome;
 		var projectName = $"{DateTime.Now:yyMMdd}-{name}";
@@ -72,11 +94,14 @@ public class TemplateService
 			return false;
 		}
 
+		// Auto-detect interactive mode from template if not explicitly set
+		var useInteractive = interactive || IsInteractiveTemplate(template);
+
 		// All templates now go through the custom template runner
-		return CreateCustomProject(template, projectPath, name, projectName);
+		return CreateCustomProject(template, projectPath, name, projectName, useInteractive);
 	}
 
-	private bool CreateCustomProject(string template, string projectPath, string simpleName, string datedName)
+	private bool CreateCustomProject(string template, string projectPath, string simpleName, string datedName, bool interactive = false)
 	{
 		EnsureBuiltInTemplatesExist();
 
@@ -94,8 +119,10 @@ public class TemplateService
 			StartInfo = new ProcessStartInfo
 			{
 				WorkingDirectory = projectPath,
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
+				// In interactive mode, don't redirect streams to allow user input
+				RedirectStandardOutput = !interactive,
+				RedirectStandardError = !interactive,
+				RedirectStandardInput = !interactive,
 				UseShellExecute = false
 			}
 		};

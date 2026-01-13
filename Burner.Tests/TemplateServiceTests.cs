@@ -134,4 +134,96 @@ public class TemplateServiceTests : IDisposable
 		var projectDir = Directory.GetDirectories(_testDir, "*-dotnet-123456").First();
 		Assert.True(Directory.Exists(projectDir));
 	}
+
+	[Fact]
+	public void IsInteractiveTemplate_ReturnsFalse_ForNonInteractiveTemplate()
+	{
+		// Built-in templates (dotnet, web) are not interactive
+		var result = _service.IsInteractiveTemplate("web");
+
+		Assert.False(result);
+	}
+
+	[Fact]
+	public void IsInteractiveTemplate_ReturnsTrue_WhenMarkerPresent()
+	{
+		var templateContent = @"#!/usr/bin/env pwsh
+# BURNER_INTERACTIVE
+# Test interactive template
+Write-Host 'Interactive!'";
+		File.WriteAllText(Path.Combine(_templatesDir, "interactive-test.ps1"), templateContent);
+
+		var result = _service.IsInteractiveTemplate("interactive-test");
+
+		Assert.True(result);
+	}
+
+	[Fact]
+	public void IsInteractiveTemplate_ReturnsFalse_WhenMarkerAbsent()
+	{
+		var templateContent = @"#!/usr/bin/env pwsh
+# Non-interactive template
+Write-Host 'Not interactive'";
+		File.WriteAllText(Path.Combine(_templatesDir, "non-interactive-test.ps1"), templateContent);
+
+		var result = _service.IsInteractiveTemplate("non-interactive-test");
+
+		Assert.False(result);
+	}
+
+	[Fact]
+	public void IsInteractiveTemplate_ReturnsFalse_ForUnknownTemplate()
+	{
+		var result = _service.IsInteractiveTemplate("does-not-exist");
+
+		Assert.False(result);
+	}
+
+	[Fact]
+	public void IsInteractiveTemplate_IsCaseInsensitive()
+	{
+		var templateContent = @"#!/bin/bash
+# burner_interactive
+echo 'Interactive!'";
+		File.WriteAllText(Path.Combine(_templatesDir, "case-test.sh"), templateContent);
+
+		var result = _service.IsInteractiveTemplate("case-test");
+
+		Assert.True(result);
+	}
+
+	[Fact]
+	public void IsInteractiveTemplate_OnlyChecksFirstTenLines()
+	{
+		var templateContent = @"#!/usr/bin/env pwsh
+# Line 2
+# Line 3
+# Line 4
+# Line 5
+# Line 6
+# Line 7
+# Line 8
+# Line 9
+# Line 10
+# Line 11
+# BURNER_INTERACTIVE
+Write-Host 'Too late'";
+		File.WriteAllText(Path.Combine(_templatesDir, "late-marker.ps1"), templateContent);
+
+		var result = _service.IsInteractiveTemplate("late-marker");
+
+		Assert.False(result);
+	}
+
+	[Fact]
+	public void CreateProject_WithInteractiveFlag_CreatesProject()
+	{
+		var result = _service.CreateProject("web", "interactive-project", interactive: true);
+
+		Assert.True(result);
+
+		var expectedPrefix = DateTime.Now.ToString("yyMMdd");
+		var projectDirs = Directory.GetDirectories(_testDir, $"{expectedPrefix}-interactive-project");
+		Assert.Single(projectDirs);
+	}
 }
