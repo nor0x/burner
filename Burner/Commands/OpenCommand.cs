@@ -28,7 +28,7 @@ public class OpenCommandSettings : CommandSettings
 
 public class OpenCommand : Command<OpenCommandSettings>
 {
-	public override int Execute(CommandContext context, OpenCommandSettings settings)
+	public override int Execute(CommandContext context, OpenCommandSettings settings, CancellationToken cancellationToken)
 	{
 		var config = BurnerConfig.Load();
 		var projectService = new ProjectService(config);

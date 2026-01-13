@@ -7,7 +7,7 @@ namespace Burner.Commands;
 
 public class StatsCommand : Command
 {
-	public override int Execute(CommandContext context)
+	public override int Execute(CommandContext context, CancellationToken cancellationToken)
 	{
 		var config = BurnerConfig.Load();
 		var projectService = new ProjectService(config);

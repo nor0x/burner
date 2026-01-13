@@ -6,7 +6,7 @@ namespace Burner.Commands;
 
 public class VersionCommand : Command
 {
-	public override int Execute(CommandContext context)
+	public override int Execute(CommandContext context, CancellationToken cancellationToken)
 	{
 		var assembly = Assembly.GetExecutingAssembly();
 		var version = assembly.GetName().Version?.ToString(3) ?? "1.0.0";

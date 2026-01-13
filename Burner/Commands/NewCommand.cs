@@ -36,7 +36,7 @@ public class NewCommandSettings : CommandSettings
 
 public class NewCommand : Command<NewCommandSettings>
 {
-	public override int Execute(CommandContext context, NewCommandSettings settings)
+	public override int Execute(CommandContext context, NewCommandSettings settings, CancellationToken cancellationToken)
 	{
 		var config = BurnerConfig.Load();
 		var templateService = new TemplateService(config);

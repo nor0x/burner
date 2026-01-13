@@ -1,4 +1,4 @@
-using Burner.Models;
+﻿using Burner.Models;
 using Burner.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -31,7 +31,7 @@ public class BurnCommandSettings : CommandSettings
 
 public class BurnCommand : Command<BurnCommandSettings>
 {
-	public override int Execute(CommandContext context, BurnCommandSettings settings)
+	public override int Execute(CommandContext context, BurnCommandSettings settings, CancellationToken cancellationToken)
 	{
 		var config = BurnerConfig.Load();
 		var projectService = new ProjectService(config);

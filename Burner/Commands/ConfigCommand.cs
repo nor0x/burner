@@ -43,7 +43,7 @@ public class ConfigCommandSettings : CommandSettings
 
 public class ConfigCommand : Command<ConfigCommandSettings>
 {
-	public override int Execute(CommandContext context, ConfigCommandSettings settings)
+	public override int Execute(CommandContext context, ConfigCommandSettings settings, CancellationToken cancellationToken)
 	{
 		var config = BurnerConfig.Load();
 

@@ -15,7 +15,7 @@ public class ListCommandSettings : CommandSettings
 
 public class ListCommand : Command<ListCommandSettings>
 {
-	public override int Execute(CommandContext context, ListCommandSettings settings)
+	public override int Execute(CommandContext context, ListCommandSettings settings, CancellationToken cancellationToken)
 	{
 		var config = BurnerConfig.Load();
 		var projectService = new ProjectService(config);
