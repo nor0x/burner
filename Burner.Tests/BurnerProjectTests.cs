@@ -108,4 +108,33 @@ public class BurnerProjectTests : IDisposable
 		var expectedAge = (DateTime.Now.Date - new DateTime(2026, 1, 7)).Days;
 		Assert.Equal(expectedAge, project.AgeInDays);
 	}
+
+	[Fact]
+	public void FromDirectory_DetectsCustomTemplate_WhenMarkerFileExists()
+	{
+		var projectPath = Path.Combine(_testDir, "260114-custom-import");
+		Directory.CreateDirectory(projectPath);
+		File.WriteAllText(Path.Combine(projectPath, ".burner-custom"), "");
+		File.WriteAllText(Path.Combine(projectPath, "test.txt"), "content");
+
+		var project = BurnerProject.FromDirectory(projectPath);
+
+		Assert.NotNull(project);
+		Assert.Equal("custom", project.Template);
+	}
+
+	[Fact]
+	public void FromDirectory_PrioritizesCustomTemplate_OverOtherDetections()
+	{
+		// Even if there's a .csproj file, if .burner-custom exists, it should be "custom"
+		var projectPath = Path.Combine(_testDir, "260114-custom-dotnet");
+		Directory.CreateDirectory(projectPath);
+		File.WriteAllText(Path.Combine(projectPath, ".burner-custom"), "");
+		File.WriteAllText(Path.Combine(projectPath, "test.csproj"), "<Project></Project>");
+
+		var project = BurnerProject.FromDirectory(projectPath);
+
+		Assert.NotNull(project);
+		Assert.Equal("custom", project.Template);
+	}
 }

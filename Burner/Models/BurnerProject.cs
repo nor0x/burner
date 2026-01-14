@@ -50,6 +50,10 @@ public class BurnerProject
 
 	private static string DetectTemplate(string projectPath)
 	{
+		// Check if this is a custom imported project
+		if (File.Exists(System.IO.Path.Combine(projectPath, ".burner-custom")))
+			return "custom";
+		
 		if (Directory.GetFiles(projectPath, "*.csproj", SearchOption.TopDirectoryOnly).Length > 0)
 			return "dotnet";
 		if (File.Exists(System.IO.Path.Combine(projectPath, "index.html")))

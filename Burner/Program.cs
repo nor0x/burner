@@ -51,6 +51,13 @@ app.Configure(config =>
 	config.AddCommand<StatsCommand>("stats")
 		.WithDescription("Show project statistics and charts");
 
+	config.AddCommand<ImportCommand>("import")
+		.WithDescription("Import current folder as a burner project")
+		.WithExample("import")
+		.WithExample("import", "-n", "my-project")
+		.WithExample("import", "--copy")
+		.WithExample("import", "-n", "my-project", "-f");
+
 	config.AddCommand<VersionCommand>("version")
 		.WithAlias("v")
 		.WithDescription("Show version and info about Burner");

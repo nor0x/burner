@@ -70,4 +70,71 @@ public class ProjectService
 			return false;
 		}
 	}
+
+	public (bool Success, string? Path) ImportProject(string sourceDir, string projectName, bool copy = false)
+	{
+		// Ensure burner home exists
+		Directory.CreateDirectory(_config.BurnerHome);
+
+		// Generate dated project name with YYMMDD prefix
+		var datedProjectName = $"{DateTime.Now:yyMMdd}-{projectName}";
+		var destinationPath = System.IO.Path.Combine(_config.BurnerHome, datedProjectName);
+
+		// Check if destination already exists
+		if (Directory.Exists(destinationPath))
+		{
+			return (false, null);
+		}
+
+		// Check if source directory exists and is valid
+		if (!Directory.Exists(sourceDir))
+		{
+			return (false, null);
+		}
+
+		try
+		{
+			if (copy)
+			{
+				// Copy the directory
+				CopyDirectory(sourceDir, destinationPath);
+			}
+			else
+			{
+				// Move the directory
+				Directory.Move(sourceDir, destinationPath);
+			}
+
+			// Create a marker file to indicate this is a custom imported project
+			File.WriteAllText(System.IO.Path.Combine(destinationPath, ".burner-custom"), "");
+
+			return (true, destinationPath);
+		}
+		catch
+		{
+			return (false, null);
+		}
+	}
+
+	private static void CopyDirectory(string sourceDir, string destinationDir)
+	{
+		// Create destination directory
+		Directory.CreateDirectory(destinationDir);
+
+		// Copy all files
+		foreach (var file in Directory.GetFiles(sourceDir))
+		{
+			var fileName = System.IO.Path.GetFileName(file);
+			var destFile = System.IO.Path.Combine(destinationDir, fileName);
+			File.Copy(file, destFile, overwrite: false);
+		}
+
+		// Recursively copy subdirectories
+		foreach (var dir in Directory.GetDirectories(sourceDir))
+		{
+			var dirName = System.IO.Path.GetFileName(dir);
+			var destDir = System.IO.Path.Combine(destinationDir, dirName);
+			CopyDirectory(dir, destDir);
+		}
+	}
 }
