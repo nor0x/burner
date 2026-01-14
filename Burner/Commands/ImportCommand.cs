@@ -44,7 +44,6 @@ public class ImportCommand : Command<ImportCommandSettings>
 		if (!settings.Copy && !settings.Force)
 		{
 			AnsiConsole.WriteLine();
-			var operation = settings.Copy ? "copied" : "moved";
 			AnsiConsole.MarkupLine($"[yellow]⚠[/] The current folder will be [red]moved[/] to the burner home directory.");
 			AnsiConsole.MarkupLine($"[grey]After import, the folder will no longer be at:[/] {currentDir}");
 			AnsiConsole.WriteLine();

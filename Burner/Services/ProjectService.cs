@@ -126,7 +126,8 @@ public class ProjectService
 		{
 			var fileName = System.IO.Path.GetFileName(file);
 			var destFile = System.IO.Path.Combine(destinationDir, fileName);
-			File.Copy(file, destFile, overwrite: false);
+			// Use overwrite: true since we're copying to a new directory we control
+			File.Copy(file, destFile, overwrite: true);
 		}
 
 		// Recursively copy subdirectories
