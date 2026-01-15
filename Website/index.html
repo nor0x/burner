@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Burner CLI - Spark ideas. Burn when done.</title>
+	<meta name="description"
+		content="A CLI tool to create and manage temporary dev projects for quick experiments. Spark ideas. Burn when done.">
+	<link rel="icon" type="image/png" href="assets/icon.png">
+	<style>
+		@font-face {
+			font-family: 'Iosevka';
+			src: url('assets/Iosevka-Extended.woff2') format('woff2');
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		:root {
+			--bg-primary: #0d0d0d;
+			--bg-secondary: #1a1a1a;
+			--bg-terminal: #0f0f0f;
+			--bg-installbox: rgba(30, 30, 30, 0.2);
+			--text-primary: #e0e0e0;
+			--text-secondary: #888;
+			--text-muted: #555;
+			--accent-orange: #ff6b35;
+			--accent-yellow: #ffc107;
+			--accent-red: #ff4444;
+			--accent-green: #00c853;
+			--accent-blue: #4dabf7;
+			--border-color: #333;
+			--gradient-fire: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #ffc107 50%, #f7931e 75%, #ff6b35 100%);
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Iosevka', monospace;
+			background: var(--bg-primary);
+			color: var(--text-primary);
+			line-height: 1.6;
+			min-height: 100vh;
+		}
+
+		/* Scanline effect */
+		body::before {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			background: repeating-linear-gradient(0deg,
+					transparent,
+					transparent 2px,
+					rgba(0, 0, 0, 0.03) 2px,
+					rgba(0, 0, 0, 0.03) 4px);
+			z-index: 1000;
+		}
+
+		.container {
+			max-width: 1000px;
+			margin: 0 auto;
+			padding: 0 20px;
+		}
+
+		/* Hero Section (combined header + hero) */
+		.hero-section {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			overflow: hidden;
+			z-index: 0;
+		}
+
+		/* Header */
+		header {
+			padding: 40px 0 20px;
+		}
+
+		.header-content {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 20px;
+		}
+
+		.logo-section {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+		}
+
+		.logo-icon {
+			width: 60px;
+			height: auto;
+			filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+		}
+
+		.logo-text {
+			font-size: 2rem;
+			font-weight: 700;
+			background: var(--gradient-fire);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+
+		.version-badge {
+			font-size: 0.75rem;
+			padding: 2px 8px;
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 4px;
+			color: var(--text-secondary);
+		}
+
+		nav {
+			display: flex;
+			gap: 20px;
+		}
+
+		nav a {
+			color: var(--text-secondary);
+			text-decoration: none;
+			font-size: 0.9rem;
+			transition: color 0.2s;
+		}
+
+		nav a:hover {
+			color: var(--accent-orange);
+		}
+
+		/* Hero */
+		.hero {
+			padding: 60px 0;
+			text-align: center;
+		}
+
+		.hero-tagline {
+			font-size: 1.2rem;
+			color: var(--text-secondary);
+			margin-top: 30px;
+		}
+
+		.hero-tagline .fire {
+			color: var(--accent-orange);
+		}
+
+		.hero-tagline .house {
+			color: var(--accent-green);
+		}
+
+		.install-box {
+			display: inline-block;
+			background: var(--bg-installbox);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			padding: 15px 25px;
+			margin: 20px 0;
+			-webkit-backdrop-filter: blur(10px);
+			backdrop-filter: blur(10px);
+		}
+
+		.install-box .prompt {
+			color: var(--accent-green);
+		}
+
+		.install-box .command {
+			color: var(--text-primary);
+		}
+
+		.install-box .flag {
+			color: var(--accent-yellow);
+		}
+
+		.install-box .package {
+			color: var(--accent-blue);
+		}
+
+		.copy-btn {
+			background: none;
+			border: none;
+			color: var(--text-secondary);
+			cursor: pointer;
+			margin-left: 15px;
+			font-family: inherit;
+			font-size: 0.9rem;
+			transition: color 0.2s;
+		}
+
+		.copy-btn:hover {
+			color: var(--accent-orange);
+		}
+
+
+		/* Main content - scrolls over hero */
+		main {
+			position: relative;
+			z-index: 1;
+			background: var(--bg-primary);
+			border-top: 1px solid var(--accent-orange);
+			box-shadow: 0 -8px 30px rgba(255, 107, 53, 0.4),
+				0 -4px 15px rgba(247, 147, 30, 0.3),
+				0 -2px 8px rgba(255, 68, 68, 0.2);
+		}
+
+		/* Features */
+		.features {
+			padding: 60px 0;
+		}
+
+		.section-title {
+			font-size: 1.2rem;
+			color: var(--accent-orange);
+			margin-bottom: 30px;
+			padding-left: 10px;
+			border-left: 3px solid var(--accent-orange);
+		}
+
+		.feature-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 20px;
+		}
+
+		.feature-card {
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			padding: 25px;
+			transition: border-color 0.2s;
+		}
+
+		.feature-card:hover {
+			border-color: var(--accent-orange);
+		}
+
+		.feature-icon {
+			font-size: 1.5rem;
+			margin-bottom: 15px;
+		}
+
+		.feature-title {
+			font-size: 1rem;
+			font-weight: 600;
+			margin-bottom: 10px;
+			color: var(--text-primary);
+		}
+
+		.feature-desc {
+			font-size: 0.85rem;
+			color: var(--text-secondary);
+		}
+
+		/* Commands Section */
+		.commands {
+			padding: 60px 0;
+		}
+
+		.command-list {
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.command-item {
+			display: grid;
+			grid-template-columns: 200px 1fr;
+			gap: 20px;
+			padding: 15px 20px;
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			align-items: center;
+		}
+
+		.command-syntax {
+			font-weight: 600;
+		}
+
+		.command-syntax .cmd {
+			color: var(--accent-yellow);
+		}
+
+		.command-syntax .sub {
+			color: var(--accent-orange);
+		}
+
+		.command-syntax .arg {
+			color: var(--text-secondary);
+		}
+
+		.command-desc {
+			color: var(--text-secondary);
+			font-size: 0.9rem;
+		}
+
+		/* Quick Start */
+		.quickstart {
+			padding: 60px 0;
+		}
+
+		.quickstart-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 30px;
+		}
+
+		.quickstart-item {
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			padding: 25px;
+		}
+
+		.quickstart-step {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			margin-bottom: 15px;
+		}
+
+		.step-number {
+			width: 30px;
+			height: 30px;
+			background: var(--accent-orange);
+			color: var(--bg-primary);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 700;
+			font-size: 0.9rem;
+		}
+
+		.step-title {
+			font-weight: 600;
+		}
+
+		.quickstart-code {
+			background: var(--bg-terminal);
+			padding: 12px 15px;
+			border-radius: 4px;
+			font-size: 0.85rem;
+			margin-top: 10px;
+		}
+
+		/* Screenshot */
+		.screenshot-section {
+			padding: 60px 0;
+			text-align: center;
+		}
+
+		.screenshot-wrapper {
+			display: inline-block;
+			background: var(--bg-secondary);
+			padding: 20px;
+			border-radius: 12px;
+			border: 1px solid var(--border-color);
+		}
+
+		.screenshot {
+			max-width: 100%;
+			width: 600px;
+			border-radius: 8px;
+		}
+
+		/* Links Section */
+		.links-section {
+			padding: 60px 0;
+			border-top: 1px solid var(--border-color);
+		}
+
+		.links-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 20px;
+		}
+
+		.link-card {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			padding: 20px;
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			text-decoration: none;
+			color: var(--text-primary);
+			transition: border-color 0.2s, transform 0.2s;
+		}
+
+		.link-card:hover {
+			border-color: var(--accent-orange);
+			transform: translateY(-2px);
+		}
+
+		.link-icon {
+			font-size: 1.5rem;
+		}
+
+		.link-text {
+			font-size: 0.9rem;
+		}
+
+		/* Footer */
+		footer {
+			position: relative;
+			z-index: 1;
+			background: var(--bg-primary);
+			padding: 40px 0;
+			text-align: center;
+			color: var(--text-muted);
+			font-size: 0.8rem;
+			border-top: 1px solid var(--border-color);
+		}
+
+		footer a {
+			color: var(--text-secondary);
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			color: var(--accent-orange);
+		}
+
+		/* Responsive */
+		@media (max-width: 768px) {
+			.header-content {
+				flex-direction: column;
+				text-align: center;
+			}
+
+			.command-item {
+				grid-template-columns: 1fr;
+			}
+
+			.ascii-banner {
+				font-size: 0.4rem;
+			}
+		}
+
+		/* Code highlights in text */
+		code {
+			background: var(--bg-secondary);
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-size: 0.9em;
+		}
+
+		/* Blinking cursor */
+		.cursor {
+			display: inline-block;
+			width: 8px;
+			height: 16px;
+			background: var(--text-primary);
+			animation: blink 1s step-start infinite;
+			vertical-align: text-bottom;
+		}
+
+		@keyframes blink {
+			50% {
+				opacity: 0;
+			}
+		}
+
+		/* Burning code characters background */
+		.burning-chars {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: 0;
+			overflow: hidden;
+		}
+
+		.hero-section .container,
+		.hero-section header,
+		.hero-section .hero {
+			position: relative;
+			z-index: 1;
+		}
+
+		.burn-char {
+			position: absolute;
+			font-family: 'Iosevka', monospace;
+			font-size: 1.2rem;
+			opacity: 0;
+			animation: burnAndSmoke 8s ease-out forwards;
+			text-shadow: 0 0 4px currentColor;
+			--rotation: 0deg;
+		}
+
+		@keyframes burnAndSmoke {
+			0% {
+				opacity: 0;
+				transform: translateY(0) scale(1) rotate(var(--rotation));
+				color: #ff6b35;
+				text-shadow: 0 0 10px #ff6b35, 0 0 20px #f7931e, 0 0 30px #ff4444;
+				filter: blur(0px);
+			}
+
+			8% {
+				opacity: 0.7;
+				color: #ff6b35;
+				text-shadow: 0 0 12px #ff6b35, 0 0 25px #ffc107, 0 0 35px #ff4444;
+			}
+
+			15% {
+				opacity: 0.6;
+				color: #f7931e;
+				text-shadow: 0 0 10px #f7931e, 0 0 20px #ffc107;
+			}
+
+			25% {
+				opacity: 0.5;
+				color: #ffc107;
+				text-shadow: 0 0 8px #ffc107, 0 0 15px #f7931e;
+			}
+
+			55% {
+				opacity: 0.35;
+				transform: translateY(-25px) scale(1.1) rotate(var(--rotation));
+				color: #888;
+				text-shadow: 0 0 6px #666;
+				filter: blur(1px);
+			}
+
+			60% {
+				opacity: 0.1;
+				transform: translateY(-50px) scale(1.2) rotate(var(--rotation));
+				color: #555;
+				text-shadow: 0 0 3px #444;
+				filter: blur(2px);
+			}
+
+			100% {
+				opacity: 0;
+				transform: translateY(-70px) scale(1.3) rotate(var(--rotation));
+				color: #333;
+				filter: blur(5px);
+			}
+		}
+
+		/* Subtle glow flicker for active burning */
+		@keyframes flicker {
+
+			0%,
+			100% {
+				opacity: 0.3;
+			}
+
+			25% {
+				opacity: 0.35;
+			}
+
+			50% {
+				opacity: 0.25;
+			}
+
+			75% {
+				opacity: 0.4;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<section class="hero-section">
+		<div class="burning-chars" id="burningChars"></div>
+		<header>
+			<div class="container">
+				<div class="header-content">
+					<div class="logo-section">
+						<img src="assets/icon_alpha.png" alt="Burner" class="logo-icon">
+						<span class="logo-text">BURNER</span>
+						<span class="version-badge">v1.0.0</span>
+					</div>
+					<nav>
+						<a href="#features">Features</a>
+						<a href="#commands">Commands</a>
+						<a href="docs/">Docs</a>
+						<a href="https://github.com/nor0x/burner">GitHub</a>
+						<a href="https://www.nuget.org/packages/Burner-CLI">NuGet</a>
+					</nav>
+				</div>
+			</div>
+		</header>
+		<div class="hero">
+			<div class="container">
+				<div class="container">
+					<div class="screenshot-wrapper">
+						<img src="assets/screenshot.jpg" alt="Burner CLI Screenshot" class="screenshot">
+					</div>
+				</div>
+				<p class="hero-tagline">
+					Spark ideas. Burn <span class="fire">&#x1F525;</span> when done.
+					It's the home <span class="house">&#x1F3E1;</span> for burner projects.
+				</p>
+				<div class="install-box">
+					<span class="prompt">$</span>
+					<span class="command"> dotnet tool install</span>
+					<span class="flag"> -g</span>
+					<span class="package"> Burner-CLI</span>
+					<button class="copy-btn" onclick="copyInstall()" title="Copy to clipboard">[copy]</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<main>
+		<section class="features" id="features">
+			<div class="container">
+				<h2 class="section-title">// FEATURES</h2>
+				<div class="feature-grid">
+					<div class="feature-card">
+						<div class="feature-icon">&#x26A1;</div>
+						<h3 class="feature-title">Quick Scaffolding</h3>
+						<p class="feature-desc">Spin up projects instantly using predefined or custom templates. Get
+							coding in seconds.</p>
+					</div>
+					<div class="feature-card">
+						<div class="feature-icon">&#x1F4C1;</div>
+						<h3 class="feature-title">Organized Storage</h3>
+						<p class="feature-desc">All projects live in a unified burner directory with YYMMDD-NAME format
+							for easy identification.</p>
+					</div>
+					<div class="feature-card">
+						<div class="feature-icon">&#x1F525;</div>
+						<h3 class="feature-title">Easy Cleanup</h3>
+						<p class="feature-desc">Remove projects when done with auto-cleaning of old experiments. Keep
+							your system tidy.</p>
+					</div>
+					<div class="feature-card">
+						<div class="feature-icon">&#x1F4E5;</div>
+						<h3 class="feature-title">Import Existing</h3>
+						<p class="feature-desc">Move or copy existing folders into burner home for unified tracking and
+							management.</p>
+					</div>
+					<div class="feature-card">
+						<div class="feature-icon">&#x1F9E9;</div>
+						<h3 class="feature-title">Extensible Templates</h3>
+						<p class="feature-desc">Add your own custom templates using PowerShell, Bash, Python, or any
+							executable script.</p>
+					</div>
+					<div class="feature-card">
+						<div class="feature-icon">&#x1F4CA;</div>
+						<h3 class="feature-title">Statistics</h3>
+						<p class="feature-desc">View project statistics with charts showing usage patterns, disk usage,
+							and age distribution.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="commands" id="commands">
+			<div class="container">
+				<h2 class="section-title">// COMMANDS</h2>
+				<div class="command-list">
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">new</span> <span
+								class="arg">&lt;template&gt; [name]</span>
+						</div>
+						<div class="command-desc">Create a new project from a template. Name is auto-generated if not
+							provided.</div>
+					</div>
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">list</span>
+						</div>
+						<div class="command-desc">List all burner projects with age and template info.</div>
+					</div>
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">burn</span> <span class="arg">[name]
+								[--days N]</span>
+						</div>
+						<div class="command-desc">Delete specific project or clean up projects older than N days.</div>
+					</div>
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">open</span> <span
+								class="arg">[name]</span>
+						</div>
+						<div class="command-desc">Open project in editor or file explorer. Interactive if no name
+							provided.</div>
+					</div>
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">import</span>
+						</div>
+						<div class="command-desc">Import current folder as a burner project (move or copy).</div>
+					</div>
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">config</span>
+						</div>
+						<div class="command-desc">View and update configuration (home directory, templates, editor,
+							auto-clean).</div>
+					</div>
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">templates</span>
+						</div>
+						<div class="command-desc">List available templates (built-in and custom).</div>
+					</div>
+					<div class="command-item">
+						<div class="command-syntax">
+							<span class="cmd">burner</span> <span class="sub">stats</span>
+						</div>
+						<div class="command-desc">Show project statistics with charts and usage metrics.</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="quickstart" id="quickstart">
+			<div class="container">
+				<h2 class="section-title">// QUICK START</h2>
+				<div class="quickstart-grid">
+					<div class="quickstart-item">
+						<div class="quickstart-step">
+							<span class="step-number">1</span>
+							<span class="step-title">Install</span>
+						</div>
+						<p style="color: var(--text-secondary); font-size: 0.85rem;">Install the CLI tool globally using
+							.NET:</p>
+						<div class="quickstart-code">
+							<span style="color: var(--accent-green);">$</span> dotnet tool install -g Burner-CLI
+						</div>
+					</div>
+					<div class="quickstart-item">
+						<div class="quickstart-step">
+							<span class="step-number">2</span>
+							<span class="step-title">Create</span>
+						</div>
+						<p style="color: var(--text-secondary); font-size: 0.85rem;">Create a new project with a
+							template:</p>
+						<div class="quickstart-code">
+							<span style="color: var(--accent-green);">$</span> burner new dotnet my-experiment
+						</div>
+					</div>
+					<div class="quickstart-item">
+						<div class="quickstart-step">
+							<span class="step-number">3</span>
+							<span class="step-title">Work</span>
+						</div>
+						<p style="color: var(--text-secondary); font-size: 0.85rem;">Open and work on your project:</p>
+						<div class="quickstart-code">
+							<span style="color: var(--accent-green);">$</span> burner open my-experiment -c
+						</div>
+					</div>
+					<div class="quickstart-item">
+						<div class="quickstart-step">
+							<span class="step-number">4</span>
+							<span class="step-title">Burn</span>
+						</div>
+						<p style="color: var(--text-secondary); font-size: 0.85rem;">Clean up when you're done
+							experimenting:</p>
+						<div class="quickstart-code">
+							<span style="color: var(--accent-green);">$</span> burner burn my-experiment
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="links-section">
+			<div class="container">
+				<div class="links-grid">
+					<a href="docs/" class="link-card">
+						<span class="link-icon">&#x1F4DA;</span>
+						<span class="link-text">Documentation</span>
+					</a>
+					<a href="https://github.com/nor0x/burner" class="link-card">
+						<span class="link-icon">&#x1F4BB;</span>
+						<span class="link-text">Source Code</span>
+					</a>
+					<a href="https://www.nuget.org/packages/Burner-CLI" class="link-card">
+						<span class="link-icon">&#x1F4E6;</span>
+						<span class="link-text">NuGet Package</span>
+					</a>
+					<a href="https://github.com/nor0x/burner/issues" class="link-card">
+						<span class="link-icon">&#x1F41B;</span>
+						<span class="link-text">Report Issues</span>
+					</a>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<div class="container">
+			<p>
+				Built with <span style="color: var(--accent-orange);">&#x1F525;</span> by
+				<a href="https://github.com/nor0x">nor0x</a> |
+				<a href="https://github.com/nor0x/burner">GitHub</a> |
+				MIT License
+			</p>
+			<p style="margin-top: 10px; color: var(--text-muted);">
+				Requires .NET 10.0 or later
+			</p>
+		</div>
+	</footer>
+
+	<script>
+		function copyInstall() {
+			navigator.clipboard.writeText('dotnet tool install -g Burner-CLI');
+			const btn = document.querySelector('.copy-btn');
+			btn.textContent = '[copied!]';
+			setTimeout(() => btn.textContent = '[copy]', 2000);
+		}
+
+		// Dynamically set main margin based on hero section height
+		function updateHeroHeight() {
+			const heroSection = document.querySelector('.hero-section');
+			const main = document.querySelector('main');
+			if (heroSection && main) {
+				var offset = heroSection.offsetHeight + 50;
+				main.style.marginTop = offset + 'px';
+			}
+		}
+
+		// Run on load and resize
+		window.addEventListener('load', updateHeroHeight);
+		window.addEventListener('resize', updateHeroHeight);
+		// Also run immediately in case images are cached
+		updateHeroHeight();
+
+		// Burning code characters effect
+		(function () {
+			const chars = [';', '/', '[', ']', '(', ')', '{', '}', ':', '-', '#', '"', '!', '<', '>', '=', '+', '*', '&', '|', '%', '$', '@', '~', '^', '`', '\\', '_', '.', ','];
+			const container = document.getElementById('burningChars');
+
+			function createBurningChar() {
+				const char = document.createElement('span');
+				char.className = 'burn-char';
+				char.textContent = chars[Math.floor(Math.random() * chars.length)];
+
+				// Random position
+				char.style.left = Math.random() * 100 + '%';
+				char.style.top = Math.random() * 100 + '%';
+
+				// Random size variation
+				const size = 1.0 + Math.random() * 1.2;
+				char.style.fontSize = size + 'rem';
+
+				// Random rotation (-45 to 45 degrees)
+				const rotation = (Math.random() - 0.5) * 90;
+				char.style.setProperty('--rotation', rotation + 'deg');
+
+				// Random animation duration (6-12 seconds)
+				const duration = 6 + Math.random() * 6;
+				char.style.animationDuration = duration + 's';
+
+				// Random delay for more organic feel
+				char.style.animationDelay = (Math.random() * 0.5) + 's';
+
+				container.appendChild(char);
+
+				// Remove element after animation completes
+				setTimeout(() => {
+					char.remove();
+				}, (duration + 1) * 1000);
+			}
+
+			// Create initial batch
+			for (let i = 0; i < 20; i++) {
+				setTimeout(() => createBurningChar(), i * 150);
+			}
+
+			// Continuously spawn new characters
+			setInterval(() => {
+				if (document.querySelectorAll('.burn-char').length < 15) {
+					createBurningChar();
+				}
+			}, 200 + Math.random() * 200);
+		})();
+	</script>
+</body>
+
+</html>
