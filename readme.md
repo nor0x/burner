@@ -53,6 +53,7 @@ dotnet tool install -g Burner-CLI
 ## Features
 
 - **Quick Scaffolding** – Spin up projects instantly using predefined templates
+- **Import Existing Projects** – Move or copy existing folders into burner home for tracking
 - **Organized Storage** – All projects live in a unified burner directory
 - **Auto-Naming** – Projects are prefixed with `YYMMDD-NAME` format for easy identification
 - **Easy Cleanup** – Remove projects when done, with auto-cleaning of old experiments
@@ -108,6 +109,21 @@ burner open my-experiment       # Print project path
 burner open my-experiment -c    # Open in editor (uses configured editor)
 burner open my-experiment -e    # Open in file explorer
 ```
+
+### `burner import`
+
+Import the current folder as a burner project. By default, the folder is **moved** to the burner home directory with a `YYMMDD-` prefix added to track its age.
+
+```bash
+burner import                   # Move current folder to burner home
+burner import -n my-project     # Move with custom name
+burner import --copy            # Copy instead of moving
+burner import -n my-project -f  # Move without confirmation
+```
+
+> **Note:** When moving (default behavior), you'll be prompted for confirmation. The original folder will no longer exist at its current location. Use `--copy` if you want to keep the original folder.
+
+Imported projects are marked with the `custom` template, as they weren't created from a burner template.
 
 ### `burner config`
 

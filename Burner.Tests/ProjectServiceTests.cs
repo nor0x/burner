@@ -199,4 +199,118 @@ public class ProjectServiceTests : IDisposable
 		Assert.False(Directory.Exists(project2));
 		Assert.Empty(_service.GetAllProjects());
 	}
+
+	[Fact]
+	public void ImportProject_MovesFolder_WithDatePrefix()
+	{
+		// Create a source directory to import
+		var sourceDir = Path.Combine(Path.GetTempPath(), $"source-{Guid.NewGuid()}");
+		Directory.CreateDirectory(sourceDir);
+		File.WriteAllText(Path.Combine(sourceDir, "test.txt"), "content");
+
+		// Get the destination path first (as the command now does)
+		var destinationPath = _service.GetImportDestinationPath("my-import");
+		Assert.NotNull(destinationPath);
+		Directory.CreateDirectory(destinationPath);
+
+		var result = _service.ImportProject(sourceDir, destinationPath, copy: false);
+
+		Assert.True(result.Success);
+		Assert.NotNull(result.Path);
+		Assert.True(Directory.Exists(sourceDir)); // Source folder still exists but is empty
+		Assert.Empty(Directory.GetFiles(sourceDir));
+		Assert.Empty(Directory.GetDirectories(sourceDir));
+		Assert.True(Directory.Exists(result.Path)); // Destination should exist
+		Assert.Contains($"{DateTime.Now:yyMMdd}-my-import", result.Path);
+		Assert.True(File.Exists(Path.Combine(result.Path, "test.txt")));
+		Assert.True(File.Exists(Path.Combine(result.Path, ".burner-custom")));
+
+		// Cleanup
+		Directory.Delete(sourceDir, true);
+		if (result.Path != null && Directory.Exists(result.Path))
+			Directory.Delete(result.Path, true);
+	}
+
+	[Fact]
+	public void ImportProject_CopiesFolder_WhenCopyFlagSet()
+	{
+		// Create a source directory to import
+		var sourceDir = Path.Combine(Path.GetTempPath(), $"source-{Guid.NewGuid()}");
+		Directory.CreateDirectory(sourceDir);
+		File.WriteAllText(Path.Combine(sourceDir, "test.txt"), "content");
+
+		// Get the destination path first (as the command now does)
+		var destinationPath = _service.GetImportDestinationPath("my-copy");
+		Assert.NotNull(destinationPath);
+		Directory.CreateDirectory(destinationPath);
+
+		var result = _service.ImportProject(sourceDir, destinationPath, copy: true);
+
+		Assert.True(result.Success);
+		Assert.NotNull(result.Path);
+		Assert.True(Directory.Exists(sourceDir)); // Source should still exist
+		Assert.True(Directory.Exists(result.Path)); // Destination should exist
+		Assert.Contains($"{DateTime.Now:yyMMdd}-my-copy", result.Path);
+		Assert.True(File.Exists(Path.Combine(result.Path, "test.txt")));
+		Assert.True(File.Exists(Path.Combine(result.Path, ".burner-custom")));
+
+		// Cleanup
+		Directory.Delete(sourceDir, true);
+		if (result.Path != null && Directory.Exists(result.Path))
+			Directory.Delete(result.Path, true);
+	}
+
+	[Fact]
+	public void ImportProject_CopiesNestedFolders()
+	{
+		// Create a source directory with nested structure
+		var sourceDir = Path.Combine(Path.GetTempPath(), $"source-{Guid.NewGuid()}");
+		Directory.CreateDirectory(Path.Combine(sourceDir, "subfolder", "nested"));
+		File.WriteAllText(Path.Combine(sourceDir, "root.txt"), "root");
+		File.WriteAllText(Path.Combine(sourceDir, "subfolder", "sub.txt"), "sub");
+		File.WriteAllText(Path.Combine(sourceDir, "subfolder", "nested", "deep.txt"), "deep");
+
+		// Get the destination path first (as the command now does)
+		var destinationPath = _service.GetImportDestinationPath("nested-test");
+		Assert.NotNull(destinationPath);
+		Directory.CreateDirectory(destinationPath);
+
+		var result = _service.ImportProject(sourceDir, destinationPath, copy: true);
+
+		Assert.True(result.Success);
+		Assert.NotNull(result.Path);
+		Assert.True(File.Exists(Path.Combine(result.Path, "root.txt")));
+		Assert.True(File.Exists(Path.Combine(result.Path, "subfolder", "sub.txt")));
+		Assert.True(File.Exists(Path.Combine(result.Path, "subfolder", "nested", "deep.txt")));
+
+		// Cleanup
+		Directory.Delete(sourceDir, true);
+		if (result.Path != null && Directory.Exists(result.Path))
+			Directory.Delete(result.Path, true);
+	}
+
+	[Fact]
+	public void ImportProject_ReturnsFalse_WhenSourceDoesNotExist()
+	{
+		var destinationPath = _service.GetImportDestinationPath("test");
+		Assert.NotNull(destinationPath);
+
+		var result = _service.ImportProject("/nonexistent/path", destinationPath, copy: false);
+
+		Assert.False(result.Success);
+		Assert.Null(result.Path);
+	}
+
+	[Fact]
+	public void GetImportDestinationPath_ReturnsNull_WhenDestinationExists()
+	{
+		// Create a destination that already exists with the same dated name
+		var datedName = $"{DateTime.Now:yyMMdd}-duplicate";
+		var existingDest = Path.Combine(_testDir, datedName);
+		Directory.CreateDirectory(existingDest);
+
+		var destinationPath = _service.GetImportDestinationPath("duplicate");
+
+		Assert.Null(destinationPath);
+	}
 }

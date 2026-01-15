@@ -70,4 +70,150 @@ public class ProjectService
 			return false;
 		}
 	}
+
+	/// <summary>
+	/// Gets the destination path for an import operation without performing the import.
+	/// </summary>
+	public string? GetImportDestinationPath(string projectName)
+	{
+		// Ensure burner home exists
+		Directory.CreateDirectory(_config.BurnerHome);
+
+		// Generate dated project name with YYMMDD prefix
+		var datedProjectName = $"{DateTime.Now:yyMMdd}-{projectName}";
+		var destinationPath = System.IO.Path.Combine(_config.BurnerHome, datedProjectName);
+
+		// Check if destination already exists
+		if (Directory.Exists(destinationPath))
+		{
+			return null;
+		}
+
+		return destinationPath;
+	}
+
+	public (bool Success, string? Path) ImportProject(string sourceDir, string destinationPath, bool copy = false)
+	{
+		// Check if source directory exists and is valid
+		if (!Directory.Exists(sourceDir))
+		{
+			return (false, null);
+		}
+
+		try
+		{
+			if (copy)
+			{
+				// Copy directory contents to destination
+				CopyDirectory(sourceDir, destinationPath);
+			}
+			else
+			{
+				// Move contents from source to destination (which should already exist)
+				MoveDirectoryContents(sourceDir, destinationPath);
+			}
+
+			// Create a marker file to indicate this is a custom imported project
+			File.WriteAllText(System.IO.Path.Combine(destinationPath, ".burner-custom"), "");
+
+			return (true, destinationPath);
+		}
+		catch (IOException ex)
+		{
+			// I/O-related failure during import (e.g., file in use, disk error)
+			System.Diagnostics.Debug.WriteLine($"Import failed with IOException: {ex.Message}");
+			return (false, null);
+		}
+		catch (UnauthorizedAccessException ex)
+		{
+			// Permission-related failure during import
+			System.Diagnostics.Debug.WriteLine($"Import failed with UnauthorizedAccessException: {ex.Message}");
+			return (false, null);
+		}
+		catch (Exception ex)
+		{
+			// Catch any other unexpected exceptions
+			System.Diagnostics.Debug.WriteLine($"Import failed with unexpected exception: {ex.Message}");
+			return (false, null);
+		}
+	}
+
+	private static void CopyDirectory(string sourceDir, string destinationDir)
+	{
+		// Create destination directory
+		Directory.CreateDirectory(destinationDir);
+
+		// Copy all files
+		foreach (var file in Directory.GetFiles(sourceDir))
+		{
+			var fileName = System.IO.Path.GetFileName(file);
+			var destFile = System.IO.Path.Combine(destinationDir, fileName);
+			
+			// Check if the file is a symbolic link
+			var fileInfo = new FileInfo(file);
+			if (fileInfo.LinkTarget != null)
+			{
+				// Preserve symbolic link instead of following it
+				File.CreateSymbolicLink(destFile, fileInfo.LinkTarget);
+			}
+			else
+			{
+				// Use overwrite: true since we're copying to a new directory we control
+				File.Copy(file, destFile, overwrite: true);
+			}
+		}
+
+		// Recursively copy subdirectories
+		foreach (var dir in Directory.GetDirectories(sourceDir))
+		{
+			var dirInfo = new DirectoryInfo(dir);
+			var dirName = System.IO.Path.GetFileName(dir);
+			var destDir = System.IO.Path.Combine(destinationDir, dirName);
+			
+			// Check if the directory is a symbolic link
+			if (dirInfo.LinkTarget != null)
+			{
+				// Preserve directory symbolic link instead of following it
+				Directory.CreateSymbolicLink(destDir, dirInfo.LinkTarget);
+			}
+			else
+			{
+				// Recursively copy directory contents
+				CopyDirectory(dir, destDir);
+			}
+		}
+	}
+
+	private static void MoveDirectoryContents(string sourceDir, string destinationDir)
+	{
+		// Ensure destination exists
+		Directory.CreateDirectory(destinationDir);
+
+		// Move all files
+		foreach (var file in Directory.GetFiles(sourceDir))
+		{
+			var fileName = System.IO.Path.GetFileName(file);
+			var destFile = System.IO.Path.Combine(destinationDir, fileName);
+
+			// Avoid ambiguous IOException by explicitly checking for existing files
+			if (File.Exists(destFile))
+			{
+				throw new IOException(
+					$"Cannot move file '{file}' to '{destFile}' because a file with the same name already exists in the destination directory.");
+			}
+			File.Move(file, destFile);
+		}
+
+		// Move all subdirectories
+		foreach (var dir in Directory.GetDirectories(sourceDir))
+		{
+			var dirName = System.IO.Path.GetFileName(dir);
+			var destDir = System.IO.Path.Combine(destinationDir, dirName);
+			Directory.Move(dir, destDir);
+		}
+
+		// Note: We intentionally don't delete the empty source directory here
+		// because the parent shell may still have it as its working directory.
+		// Deleting it would cause "Unable to find current directory" errors.
+	}
 }
