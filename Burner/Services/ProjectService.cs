@@ -148,16 +148,39 @@ public class ProjectService
 		{
 			var fileName = System.IO.Path.GetFileName(file);
 			var destFile = System.IO.Path.Combine(destinationDir, fileName);
-			// Use overwrite: true since we're copying to a new directory we control
-			File.Copy(file, destFile, overwrite: true);
+			
+			// Check if the file is a symbolic link
+			var fileInfo = new FileInfo(file);
+			if (fileInfo.LinkTarget != null)
+			{
+				// Preserve symbolic link instead of following it
+				File.CreateSymbolicLink(destFile, fileInfo.LinkTarget);
+			}
+			else
+			{
+				// Use overwrite: true since we're copying to a new directory we control
+				File.Copy(file, destFile, overwrite: true);
+			}
 		}
 
 		// Recursively copy subdirectories
 		foreach (var dir in Directory.GetDirectories(sourceDir))
 		{
+			var dirInfo = new DirectoryInfo(dir);
 			var dirName = System.IO.Path.GetFileName(dir);
 			var destDir = System.IO.Path.Combine(destinationDir, dirName);
-			CopyDirectory(dir, destDir);
+			
+			// Check if the directory is a symbolic link
+			if (dirInfo.LinkTarget != null)
+			{
+				// Preserve directory symbolic link instead of following it
+				Directory.CreateSymbolicLink(destDir, dirInfo.LinkTarget);
+			}
+			else
+			{
+				// Recursively copy directory contents
+				CopyDirectory(dir, destDir);
+			}
 		}
 	}
 
