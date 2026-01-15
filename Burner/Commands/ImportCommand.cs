@@ -36,6 +36,25 @@ public class ImportCommand : Command<ImportCommandSettings>
 		// Use provided name or default to current folder name
 		var projectName = settings.Name ?? currentFolderName;
 
+		// Validate project name for invalid filesystem characters
+		var invalidChars = Path.GetInvalidFileNameChars();
+		if (projectName.IndexOfAny(invalidChars) >= 0)
+		{
+			AnsiConsole.MarkupLine($"[red]✗[/] Invalid project name. The name contains invalid characters.");
+			AnsiConsole.MarkupLine($"[grey]Invalid characters:[/] {string.Join(" ", invalidChars.Select(c => c == '\0' ? "\\0" : c.ToString()))}");
+			return 1;
+		}
+
+		// Check if we're already inside the burner home directory
+		var burnerHomePath = Path.GetFullPath(config.BurnerHome);
+		var currentDirPath = Path.GetFullPath(currentDir);
+		if (currentDirPath.StartsWith(burnerHomePath, StringComparison.OrdinalIgnoreCase))
+		{
+			AnsiConsole.MarkupLine("[yellow]⚠[/] Current folder is already inside the burner home directory.");
+			AnsiConsole.MarkupLine("[grey]No need to import.[/]");
+			return 0;
+		}
+
 		AnsiConsole.WriteLine();
 		AnsiConsole.MarkupLine($"[yellow]Importing:[/] {currentFolderName}");
 		AnsiConsole.MarkupLine($"[grey]Source:[/] {currentDir}");
@@ -64,22 +83,69 @@ public class ImportCommand : Command<ImportCommandSettings>
 			return 1;
 		}
 
-		// Create destination directory and navigate to it first
-		// This avoids issues with moving a directory we're currently in
-		Directory.CreateDirectory(destinationPath);
-		Directory.SetCurrentDirectory(destinationPath);
-
 		// Import the project
 		bool success = false;
+		var originalDir = currentDir;
+		var destinationCreated = false;
 
-		AnsiConsole.Status()
-			.Spinner(Spinner.Known.Aesthetic)
-			.SpinnerStyle(Style.Parse("orangered1"))
-			.Start($"[orangered1]Importing[/] project [white]{projectName}[/]...", ctx =>
+		try
+		{
+			// Create destination directory and navigate to it first
+			// This avoids issues with moving a directory we're currently in
+			Directory.CreateDirectory(destinationPath);
+			destinationCreated = true;
+
+			// Only change directory for move operations
+			if (!settings.Copy)
 			{
-				var result = projectService.ImportProject(currentDir, destinationPath, settings.Copy);
-				success = result.Success;
-			});
+				Directory.SetCurrentDirectory(destinationPath);
+			}
+
+			AnsiConsole.Status()
+				.Spinner(Spinner.Known.Aesthetic)
+				.SpinnerStyle(Style.Parse("orangered1"))
+				.Start($"[orangered1]Importing[/] project [white]{projectName}[/]...", ctx =>
+				{
+					var result = projectService.ImportProject(currentDir, destinationPath, settings.Copy);
+					success = result.Success;
+				});
+		}
+		catch (Exception ex)
+		{
+			AnsiConsole.MarkupLine($"[red]✗[/] Failed to import project: {ex.Message}");
+			success = false;
+		}
+		finally
+		{
+			// Restore working directory if we changed it and operation failed
+			if (!settings.Copy && !success)
+			{
+				try
+				{
+					Directory.SetCurrentDirectory(originalDir);
+				}
+				catch
+				{
+					// If we can't restore, that's okay - the original directory may no longer exist
+				}
+			}
+
+			// Clean up empty destination directory on failure
+			if (!success && destinationCreated && Directory.Exists(destinationPath))
+			{
+				try
+				{
+					if (!Directory.EnumerateFileSystemEntries(destinationPath).Any())
+					{
+						Directory.Delete(destinationPath, recursive: false);
+					}
+				}
+				catch
+				{
+					// If cleanup fails, that's okay - we tried
+				}
+			}
+		}
 
 		if (success)
 		{

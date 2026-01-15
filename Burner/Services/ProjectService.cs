@@ -118,8 +118,22 @@ public class ProjectService
 
 			return (true, destinationPath);
 		}
-		catch
+		catch (IOException ex)
 		{
+			// I/O-related failure during import (e.g., file in use, disk error)
+			System.Diagnostics.Debug.WriteLine($"Import failed with IOException: {ex.Message}");
+			return (false, null);
+		}
+		catch (UnauthorizedAccessException ex)
+		{
+			// Permission-related failure during import
+			System.Diagnostics.Debug.WriteLine($"Import failed with UnauthorizedAccessException: {ex.Message}");
+			return (false, null);
+		}
+		catch (Exception ex)
+		{
+			// Catch any other unexpected exceptions
+			System.Diagnostics.Debug.WriteLine($"Import failed with unexpected exception: {ex.Message}");
 			return (false, null);
 		}
 	}
