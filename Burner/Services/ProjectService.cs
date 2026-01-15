@@ -71,7 +71,10 @@ public class ProjectService
 		}
 	}
 
-	public (bool Success, string? Path) ImportProject(string sourceDir, string projectName, bool copy = false)
+	/// <summary>
+	/// Gets the destination path for an import operation without performing the import.
+	/// </summary>
+	public string? GetImportDestinationPath(string projectName)
 	{
 		// Ensure burner home exists
 		Directory.CreateDirectory(_config.BurnerHome);
@@ -83,9 +86,14 @@ public class ProjectService
 		// Check if destination already exists
 		if (Directory.Exists(destinationPath))
 		{
-			return (false, null);
+			return null;
 		}
 
+		return destinationPath;
+	}
+
+	public (bool Success, string? Path) ImportProject(string sourceDir, string destinationPath, bool copy = false)
+	{
 		// Check if source directory exists and is valid
 		if (!Directory.Exists(sourceDir))
 		{
@@ -96,13 +104,13 @@ public class ProjectService
 		{
 			if (copy)
 			{
-				// Copy the directory
+				// Copy directory contents to destination
 				CopyDirectory(sourceDir, destinationPath);
 			}
 			else
 			{
-				// Move the directory
-				Directory.Move(sourceDir, destinationPath);
+				// Move contents from source to destination (which should already exist)
+				MoveDirectoryContents(sourceDir, destinationPath);
 			}
 
 			// Create a marker file to indicate this is a custom imported project
@@ -137,5 +145,31 @@ public class ProjectService
 			var destDir = System.IO.Path.Combine(destinationDir, dirName);
 			CopyDirectory(dir, destDir);
 		}
+	}
+
+	private static void MoveDirectoryContents(string sourceDir, string destinationDir)
+	{
+		// Ensure destination exists
+		Directory.CreateDirectory(destinationDir);
+
+		// Move all files
+		foreach (var file in Directory.GetFiles(sourceDir))
+		{
+			var fileName = System.IO.Path.GetFileName(file);
+			var destFile = System.IO.Path.Combine(destinationDir, fileName);
+			File.Move(file, destFile);
+		}
+
+		// Move all subdirectories
+		foreach (var dir in Directory.GetDirectories(sourceDir))
+		{
+			var dirName = System.IO.Path.GetFileName(dir);
+			var destDir = System.IO.Path.Combine(destinationDir, dirName);
+			Directory.Move(dir, destDir);
+		}
+
+		// Note: We intentionally don't delete the empty source directory here
+		// because the parent shell may still have it as its working directory.
+		// Deleting it would cause "Unable to find current directory" errors.
 	}
 }

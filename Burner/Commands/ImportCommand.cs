@@ -47,7 +47,7 @@ public class ImportCommand : Command<ImportCommandSettings>
 			AnsiConsole.MarkupLine($"[yellow]⚠[/] The current folder will be [red]moved[/] to the burner home directory.");
 			AnsiConsole.MarkupLine($"[grey]After import, the folder will no longer be at:[/] {currentDir}");
 			AnsiConsole.WriteLine();
-			
+
 			var confirm = AnsiConsole.Confirm("Do you want to proceed?", defaultValue: false);
 			if (!confirm)
 			{
@@ -56,31 +56,42 @@ public class ImportCommand : Command<ImportCommandSettings>
 			}
 		}
 
+		// Get the destination path first
+		var destinationPath = projectService.GetImportDestinationPath(projectName);
+		if (destinationPath == null)
+		{
+			AnsiConsole.MarkupLine("[red]✗[/] A project with this name already exists");
+			return 1;
+		}
+
+		// Create destination directory and navigate to it first
+		// This avoids issues with moving a directory we're currently in
+		Directory.CreateDirectory(destinationPath);
+		Directory.SetCurrentDirectory(destinationPath);
+
 		// Import the project
 		bool success = false;
-		string? importedPath = null;
 
 		AnsiConsole.Status()
 			.Spinner(Spinner.Known.Aesthetic)
 			.SpinnerStyle(Style.Parse("orangered1"))
 			.Start($"[orangered1]Importing[/] project [white]{projectName}[/]...", ctx =>
 			{
-				var result = projectService.ImportProject(currentDir, projectName, settings.Copy);
+				var result = projectService.ImportProject(currentDir, destinationPath, settings.Copy);
 				success = result.Success;
-				importedPath = result.Path;
 			});
 
-		if (success && importedPath != null)
+		if (success)
 		{
 			var operation = settings.Copy ? "copied" : "moved";
-			AnsiConsole.MarkupLine($"[green]:fire:[/] Project {operation} to [blue]{importedPath}[/]");
+			AnsiConsole.MarkupLine($"[green]:fire:[/] Project {operation} to [blue]{destinationPath}[/]");
 			AnsiConsole.MarkupLine($"[grey]Template:[/] custom");
-			
+
 			if (!settings.Copy)
 			{
 				AnsiConsole.WriteLine();
-				AnsiConsole.MarkupLine("[yellow]Note:[/] The original folder has been moved. Your current directory may no longer exist.");
-				AnsiConsole.MarkupLine("[grey]Tip:[/] Use 'cd ~' or navigate to a different directory.");
+				AnsiConsole.MarkupLine($"[grey]Tip:[/] Run [blue]cd \"{destinationPath}\"[/] to navigate to your project.");
+				AnsiConsole.MarkupLine($"[grey]Note:[/] The original folder is now empty and can be deleted.");
 			}
 		}
 		else
