@@ -157,6 +157,13 @@ public class ProjectService
 		{
 			var fileName = System.IO.Path.GetFileName(file);
 			var destFile = System.IO.Path.Combine(destinationDir, fileName);
+
+			// Avoid ambiguous IOException by explicitly checking for existing files
+			if (File.Exists(destFile))
+			{
+				throw new IOException(
+					$"Cannot move file '{file}' to '{destFile}' because a file with the same name already exists in the destination directory.");
+			}
 			File.Move(file, destFile);
 		}
 
