@@ -14,6 +14,7 @@ Spark ideas. Burn 🔥 when done. It's the home 🏡 for burner projects.
 <a href="https://github.com/nor0x/burner/actions/workflows/publish.yml"><img src="https://github.com/nor0x/burner/actions/workflows/publish.yml/badge.svg" alt="Publish NuGet" /></a>
 <a href="https://www.nuget.org/packages/Burner-CLI"><img src="https://img.shields.io/nuget/v/Burner-CLI.svg" alt="NuGet" /></a>
 <a href="https://www.nuget.org/packages/Burner-CLI"><img src="https://img.shields.io/nuget/dt/Burner-CLI.svg" alt="NuGet Downloads" /></a>
+<a href="https://nor0x.github.io/burner"><img src="https://github.com/nor0x/burner/actions/workflows/website/badge.svg" alt="Deploy Website" /></a>
 </p>
 
 <p align="center">
