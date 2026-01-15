@@ -5,8 +5,12 @@ using Spectre.Console.Cli;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Lists all available project templates.
+/// </summary>
 public class TemplatesCommand : Command
 {
+	/// <inheritdoc/>
 	public override int Execute(CommandContext context, CancellationToken cancellationToken)
 	{
 		var config = BurnerConfig.Load();
@@ -17,6 +21,11 @@ public class TemplatesCommand : Command
 		return 0;
 	}
 
+	/// <summary>
+	/// Displays a formatted table of available templates.
+	/// </summary>
+	/// <param name="templateService">The template service to query.</param>
+	/// <param name="config">The burner configuration.</param>
 	public static void ShowTemplatesTable(TemplateService templateService, BurnerConfig config)
 	{
 		var templates = templateService.GetAvailableTemplatesWithDetails().ToList();

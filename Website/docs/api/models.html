@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Models API - Burner CLI Docs</title>
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="../../" class="sidebar-logo">
+                <img src="../../assets/icon_alpha.png" alt="Burner">
+                <span>BURNER</span>
+            </a>
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <a href="../" class="nav-link">Overview</a>
+                    <a href="../installation.html" class="nav-link">Installation</a>
+                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Commands</div>
+                    <a href="../commands/new.html" class="nav-link">new</a>
+                    <a href="../commands/list.html" class="nav-link">list</a>
+                    <a href="../commands/burn.html" class="nav-link">burn</a>
+                    <a href="../commands/open.html" class="nav-link">open</a>
+                    <a href="../commands/import.html" class="nav-link">import</a>
+                    <a href="../commands/config.html" class="nav-link">config</a>
+                    <a href="../commands/templates.html" class="nav-link">templates</a>
+                    <a href="../commands/stats.html" class="nav-link">stats</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Advanced</div>
+                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                    <a href="../configuration.html" class="nav-link">Configuration</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">API Reference</div>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="models.html" class="nav-link active">Models</a>
+                    <a href="commands.html" class="nav-link">Commands</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Models API Reference</h1>
+<p>Data models and configuration classes.</p>
+
+<!-- AUTO-GENERATED FROM SOURCE CODE - DO NOT EDIT MANUALLY -->
+<!-- Generated from XML documentation comments -->
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">BurnerConfig</div>
+        <div class="api-class-namespace">Burner.Models</div>
+    </div>
+    <div class="api-class-body">
+        <p>Configuration settings for Burner CLI. Persisted to ~/.burner/config.json.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">BurnerHome</code>
+            <p class="api-method-desc">Gets or sets the directory where burner projects are stored. Default: ~/.burner/projects</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">BurnerTemplates</code>
+            <p class="api-method-desc">Gets or sets the directory where project templates are stored. Default: ~/.burner/templates</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">AutoCleanDays</code>
+            <p class="api-method-desc">Gets or sets the number of days after which projects are eligible for auto-cleanup. Set to 0 to disable auto-cleanup. Default: 30</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Editor</code>
+            <p class="api-method-desc">Gets or sets the editor command to use when opening projects (e.g., &quot;code&quot;, &quot;cursor&quot;, &quot;rider&quot;). Default: &quot;code&quot; (VS Code)</p>
+        </div>
+        <h4>Methods</h4>
+        <div class="api-method">
+            <code class="api-method-sig">Load()</code>
+            <p class="api-method-desc">Loads the configuration from disk, or creates a default configuration if none exists. Returns: The loaded or default configuration.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Save()</code>
+            <p class="api-method-desc">Saves the current configuration to disk.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">GetConfigPath()</code>
+            <p class="api-method-desc">Gets the path to the configuration file. Returns: The full path to the config.json file.</p>
+        </div>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">BurnerProject</div>
+        <div class="api-class-namespace">Burner.Models</div>
+    </div>
+    <div class="api-class-body">
+        <p>Represents a burner project with its metadata.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">Name</code>
+            <p class="api-method-desc">Gets or sets the project name (includes date prefix in YYMMDD-name format).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Path</code>
+            <p class="api-method-desc">Gets or sets the full file system path to the project directory.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">CreatedAt</code>
+            <p class="api-method-desc">Gets or sets the date and time when the project was created.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Template</code>
+            <p class="api-method-desc">Gets or sets the template used to create this project (e.g., &quot;dotnet&quot;, &quot;web&quot;, &quot;custom&quot;).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">AgeInDays</code>
+            <p class="api-method-desc">Gets the age of the project in days since creation.</p>
+        </div>
+        <h4>Methods</h4>
+        <div class="api-method">
+            <code class="api-method-sig">FromDirectory(String path)</code>
+            <p class="api-method-desc">Creates a BurnerProject instance from a directory path. Returns: A BurnerProject instance, or null if the directory doesn't exist.</p>
+        </div>
+    </div>
+</div>
+
+<h2>Source Files</h2>
+<ul>
+    <li><a href="https://github.com/nor0x/burner/blob/main/Burner/Models/BurnerConfig.cs">Burner/Models/BurnerConfig.cs</a></li>
+    <li><a href="https://github.com/nor0x/burner/blob/main/Burner/Models/BurnerProject.cs">Burner/Models/BurnerProject.cs</a></li>
+</ul>
+        </main>
+    </div>
+</body>
+</html>

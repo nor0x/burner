@@ -5,11 +5,18 @@ using Spectre.Console;
 
 namespace Burner.Services;
 
+/// <summary>
+/// Manages templates - listing, creating projects, and handling built-in/custom templates.
+/// </summary>
 public class TemplateService
 {
 	private readonly BurnerConfig _config;
 	private readonly Assembly _assembly;
 
+	/// <summary>
+	/// Creates a new instance. Ensures built-in templates exist in the templates directory.
+	/// </summary>
+	/// <param name="config">The burner configuration to use.</param>
 	public TemplateService(BurnerConfig config)
 	{
 		_config = config;
@@ -17,6 +24,10 @@ public class TemplateService
 		EnsureBuiltInTemplatesExist();
 	}
 
+	/// <summary>
+	/// Returns template names (without file extensions).
+	/// </summary>
+	/// <returns>An enumerable of available template names.</returns>
 	public IEnumerable<string> GetAvailableTemplates()
 	{
 		EnsureBuiltInTemplatesExist();
@@ -34,6 +45,10 @@ public class TemplateService
 		return templates.Distinct();
 	}
 
+	/// <summary>
+	/// Returns templates with full details including filename and built-in status.
+	/// </summary>
+	/// <returns>An enumerable of tuples containing template name, filename, and built-in status.</returns>
 	public IEnumerable<(string Name, string Filename, bool IsBuiltIn)> GetAvailableTemplatesWithDetails()
 	{
 		EnsureBuiltInTemplatesExist();
@@ -61,6 +76,8 @@ public class TemplateService
 	/// <summary>
 	/// Checks if a template requires interactive mode by looking for BURNER_INTERACTIVE marker.
 	/// </summary>
+	/// <param name="template">The template name to check.</param>
+	/// <returns>True if the template requires interactive mode.</returns>
 	public bool IsInteractiveTemplate(string template)
 	{
 		EnsureBuiltInTemplatesExist();
@@ -80,6 +97,14 @@ public class TemplateService
 		}
 	}
 
+	/// <summary>
+	/// Creates a new project from a template.
+	/// </summary>
+	/// <param name="template">The template name to use.</param>
+	/// <param name="name">The project name.</param>
+	/// <param name="targetDirectory">Optional target directory (uses burner home if not specified).</param>
+	/// <param name="interactive">Whether to run in interactive mode for user input.</param>
+	/// <returns>True if the project was created successfully.</returns>
 	public bool CreateProject(string template, string name, string? targetDirectory = null, bool interactive = false)
 	{
 		var projectDir = targetDirectory ?? _config.BurnerHome;

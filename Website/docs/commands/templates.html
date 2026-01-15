@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>burner templates - Burner CLI Docs</title>
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="../../" class="sidebar-logo">
+                <img src="../../assets/icon_alpha.png" alt="Burner">
+                <span>BURNER</span>
+            </a>
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <a href="../" class="nav-link">Overview</a>
+                    <a href="../installation.html" class="nav-link">Installation</a>
+                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Commands</div>
+                    <a href="new.html" class="nav-link">new</a>
+                    <a href="list.html" class="nav-link">list</a>
+                    <a href="burn.html" class="nav-link">burn</a>
+                    <a href="open.html" class="nav-link">open</a>
+                    <a href="import.html" class="nav-link">import</a>
+                    <a href="config.html" class="nav-link">config</a>
+                    <a href="templates.html" class="nav-link active">templates</a>
+                    <a href="stats.html" class="nav-link">stats</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Advanced</div>
+                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                    <a href="../configuration.html" class="nav-link">Configuration</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">API Reference</div>
+                    <a href="../api/services.html" class="nav-link">Services</a>
+                    <a href="../api/models.html" class="nav-link">Models</a>
+                    <a href="../api/commands.html" class="nav-link">Commands</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>burner templates</h1>
+            <p>List all available templates (built-in and custom).</p>
+
+            <div class="command-card">
+                <div class="command-signature">
+                    <span class="cmd">burner</span> <span class="arg">templates</span>
+                </div>
+            </div>
+
+            <h2>Examples</h2>
+            <pre><code><span class="comment"># List all available templates</span>
+<span class="cmd">burner templates</span></code></pre>
+
+            <h2>Output</h2>
+            <p>Displays a table with:</p>
+            <ul>
+                <li><strong>Template</strong> - The template name (used with <code>burner new</code>)</li>
+                <li><strong>Filename</strong> - The script filename</li>
+                <li><strong>Type</strong> - <code>built-in</code> or <code>custom</code></li>
+            </ul>
+
+            <h2>Built-in Templates</h2>
+            <table>
+                <thead>
+                    <tr><th>Template</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dotnet</code></td>
+                        <td>.NET Console Application</td>
+                    </tr>
+                    <tr>
+                        <td><code>web</code></td>
+                        <td>HTML + JavaScript + CSS Web App</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <p><strong>Tip:</strong> Add custom templates to extend Burner. See <a href="../custom-templates.html">Custom Templates</a> for details.</p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

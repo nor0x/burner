@@ -1,4 +1,4 @@
-﻿using Burner.Models;
+using Burner.Models;
 using Burner.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -6,29 +6,50 @@ using System.ComponentModel;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Settings for the burn command.
+/// </summary>
 public class BurnCommandSettings : CommandSettings
 {
+	/// <summary>
+	/// Specific project name to delete (optional).
+	/// </summary>
 	[CommandArgument(0, "[NAME]")]
 	[Description("Specific project name to delete (optional)")]
 	public string? Name { get; set; }
 
+	/// <summary>
+	/// Delete projects older than specified days.
+	/// </summary>
 	[CommandOption("-d|--days <DAYS>")]
 	[Description("Delete projects older than specified days")]
 	public int? Days { get; set; }
 
+	/// <summary>
+	/// Skip confirmation prompt.
+	/// </summary>
 	[CommandOption("-f|--force")]
 	[Description("Skip confirmation prompt")]
 	public bool Force { get; set; }
 
+	/// <summary>
+	/// Interactive mode: select projects to delete.
+	/// </summary>
 	[CommandOption("-i|--interactive")]
 	[Description("Interactive mode: select projects to delete")]
 	public bool Interactive { get; set; }
 
+	/// <summary>
+	/// Delete ALL burner projects.
+	/// </summary>
 	[CommandOption("-a|--all")]
 	[Description("Delete ALL burner projects")]
 	public bool All { get; set; }
 }
 
+/// <summary>
+/// Deletes burner projects. Supports deleting by name, age, or interactively.
+/// </summary>
 public class BurnCommand : Command<BurnCommandSettings>
 {
 	public override int Execute(CommandContext context, BurnCommandSettings settings, CancellationToken cancellationToken)

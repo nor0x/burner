@@ -7,25 +7,43 @@ using System.Diagnostics;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Settings for the open command.
+/// </summary>
 public class OpenCommandSettings : CommandSettings
 {
+	/// <summary>
+	/// Project name to open (optional, interactive if not provided).
+	/// </summary>
 	[CommandArgument(0, "[NAME]")]
 	[Description("Project name to open (optional, interactive if not provided)")]
 	public string? Name { get; set; }
 
+	/// <summary>
+	/// Open in file explorer instead of terminal.
+	/// </summary>
 	[CommandOption("-e|--explorer")]
 	[Description("Open in file explorer instead of terminal")]
 	public bool Explorer { get; set; }
 
+	/// <summary>
+	/// Open in editor (uses configured editor).
+	/// </summary>
 	[CommandOption("-c|--code")]
 	[Description("Open in editor (uses configured editor)")]
 	public bool Code { get; set; }
 
+	/// <summary>
+	/// Interactive mode: select project from list.
+	/// </summary>
 	[CommandOption("-i|--interactive")]
 	[Description("Interactive mode: select project from list")]
 	public bool Interactive { get; set; }
 }
 
+/// <summary>
+/// Opens a burner project in editor, file explorer, or outputs the path.
+/// </summary>
 public class OpenCommand : Command<OpenCommandSettings>
 {
 	public override int Execute(CommandContext context, OpenCommandSettings settings, CancellationToken cancellationToken)

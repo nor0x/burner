@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - Burner CLI Docs</title>
+    <link rel="icon" type="image/png" href="../assets/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="../" class="sidebar-logo">
+                <img src="../assets/icon_alpha.png" alt="Burner">
+                <span>BURNER</span>
+            </a>
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <a href="./" class="nav-link">Overview</a>
+                    <a href="installation.html" class="nav-link">Installation</a>
+                    <a href="quickstart.html" class="nav-link">Quick Start</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Commands</div>
+                    <a href="commands/new.html" class="nav-link">new</a>
+                    <a href="commands/list.html" class="nav-link">list</a>
+                    <a href="commands/burn.html" class="nav-link">burn</a>
+                    <a href="commands/open.html" class="nav-link">open</a>
+                    <a href="commands/import.html" class="nav-link">import</a>
+                    <a href="commands/config.html" class="nav-link">config</a>
+                    <a href="commands/templates.html" class="nav-link">templates</a>
+                    <a href="commands/stats.html" class="nav-link">stats</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Advanced</div>
+                    <a href="custom-templates.html" class="nav-link">Custom Templates</a>
+                    <a href="configuration.html" class="nav-link active">Configuration</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">API Reference</div>
+                    <a href="api/services.html" class="nav-link">Services</a>
+                    <a href="api/models.html" class="nav-link">Models</a>
+                    <a href="api/commands.html" class="nav-link">Commands</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Configuration</h1>
+            <p>Configure Burner to match your workflow.</p>
+
+            <h2>Config File Location</h2>
+            <pre><code>~/.burner/config.json</code></pre>
+            <p>View the path with:</p>
+            <pre><code><span class="cmd">burner config</span> <span class="opt">--path</span></code></pre>
+
+            <h2>Configuration Options</h2>
+            <table>
+                <thead>
+                    <tr><th>Option</th><th>Description</th><th>Default</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>burnerHome</code></td>
+                        <td>Directory where projects are created</td>
+                        <td><code>~/.burner/projects</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>burnerTemplates</code></td>
+                        <td>Directory for custom template scripts</td>
+                        <td><code>~/.burner/templates</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>autoCleanDays</code></td>
+                        <td>Projects older than this are flagged for cleanup (0 to disable)</td>
+                        <td><code>30</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>editor</code></td>
+                        <td>Editor command for opening projects</td>
+                        <td><code>code</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Example Config File</h2>
+            <pre><code>{
+  <span class="string">"burnerHome"</span>: <span class="string">"~/.burner/projects"</span>,
+  <span class="string">"burnerTemplates"</span>: <span class="string">"~/.burner/templates"</span>,
+  <span class="string">"autoCleanDays"</span>: <span class="arg">30</span>,
+  <span class="string">"editor"</span>: <span class="string">"code"</span>
+}</code></pre>
+
+            <h2>Setting Options via CLI</h2>
+            <pre><code><span class="comment"># Set burner home directory</span>
+<span class="cmd">burner config</span> <span class="opt">--home</span> <span class="string">~/projects/experiments</span>
+
+<span class="comment"># Set templates directory</span>
+<span class="cmd">burner config</span> <span class="opt">--templates</span> <span class="string">~/my-templates</span>
+
+<span class="comment"># Set auto-cleanup days</span>
+<span class="cmd">burner config</span> <span class="opt">--auto-clean-days</span> <span class="string">60</span>
+
+<span class="comment"># Disable auto-cleanup</span>
+<span class="cmd">burner config</span> <span class="opt">--auto-clean-days</span> <span class="string">0</span>
+
+<span class="comment"># Set editor</span>
+<span class="cmd">burner config</span> <span class="opt">--editor</span> <span class="string">cursor</span></code></pre>
+
+            <h2>Popular Editor Commands</h2>
+            <table>
+                <thead>
+                    <tr><th>Editor</th><th>Command</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Visual Studio Code</td>
+                        <td><code>code</code></td>
+                    </tr>
+                    <tr>
+                        <td>Cursor</td>
+                        <td><code>cursor</code></td>
+                    </tr>
+                    <tr>
+                        <td>JetBrains Rider</td>
+                        <td><code>rider</code></td>
+                    </tr>
+                    <tr>
+                        <td>WebStorm</td>
+                        <td><code>webstorm</code></td>
+                    </tr>
+                    <tr>
+                        <td>Sublime Text</td>
+                        <td><code>subl</code></td>
+                    </tr>
+                    <tr>
+                        <td>Vim</td>
+                        <td><code>vim</code></td>
+                    </tr>
+                    <tr>
+                        <td>Neovim</td>
+                        <td><code>nvim</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Opening Directories</h2>
+            <pre><code><span class="comment"># Open burner home in file explorer</span>
+<span class="cmd">burner config</span> <span class="opt">--open-home</span>
+
+<span class="comment"># Open templates directory in file explorer</span>
+<span class="cmd">burner config</span> <span class="opt">--open-templates</span></code></pre>
+        </main>
+    </div>
+</body>
+</html>
