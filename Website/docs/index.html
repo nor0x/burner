@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +7,14 @@
 	<meta name="description"
 		content="Documentation for Burner CLI - A tool to create and manage temporary dev projects.">
 	<link rel="icon" type="image/png" href="../assets/icon.png">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
-		rel="stylesheet">
 	<style>
+		@font-face {
+			font-family: 'Iosevka';
+			src: url('../assets/Iosevka-Extended.woff2') format('woff2');
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
 		:root {
 			--bg-primary: #0d0d0d;
 			--bg-secondary: #1a1a1a;
@@ -27,27 +29,23 @@
 			--accent-blue: #4dabf7;
 			--border-color: #333;
 		}
-
 		* {
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
 		}
-
 		body {
-			font-family: 'JetBrains Mono', monospace;
+			font-family: 'Iosevka', monospace;
 			background: var(--bg-primary);
 			color: var(--text-primary);
 			line-height: 1.7;
 			min-height: 100vh;
 		}
-
 		.layout {
 			display: grid;
 			grid-template-columns: 250px 1fr;
 			min-height: 100vh;
 		}
-
 		/* Sidebar */
 		.sidebar {
 			background: var(--bg-secondary);
@@ -58,7 +56,6 @@
 			height: 100vh;
 			overflow-y: auto;
 		}
-
 		.sidebar-logo {
 			display: flex;
 			align-items: center;
@@ -67,22 +64,18 @@
 			text-decoration: none;
 			color: var(--text-primary);
 		}
-
 		.sidebar-logo img {
 			width: 32px;
 			height: auto;
 		}
-
 		.sidebar-logo span {
 			font-weight: 700;
 			font-size: 1.1rem;
 			color: var(--accent-orange);
 		}
-
 		.nav-section {
 			margin-bottom: 25px;
 		}
-
 		.nav-section-title {
 			font-size: 0.75rem;
 			text-transform: uppercase;
@@ -90,7 +83,6 @@
 			margin-bottom: 10px;
 			letter-spacing: 0.05em;
 		}
-
 		.nav-link {
 			display: block;
 			color: var(--text-secondary);
@@ -101,29 +93,24 @@
 			margin-bottom: 2px;
 			transition: all 0.2s;
 		}
-
 		.nav-link:hover {
 			color: var(--text-primary);
 			background: var(--bg-primary);
 		}
-
 		.nav-link.active {
 			color: var(--accent-orange);
 			background: rgba(255, 107, 53, 0.1);
 		}
-
 		/* Main Content */
 		.main-content {
 			padding: 40px 60px;
 			max-width: 900px;
 		}
-
 		h1 {
 			font-size: 2rem;
 			margin-bottom: 20px;
 			color: var(--accent-orange);
 		}
-
 		h2 {
 			font-size: 1.4rem;
 			margin: 40px 0 15px;
@@ -131,35 +118,29 @@
 			border-bottom: 1px solid var(--border-color);
 			color: var(--text-primary);
 		}
-
 		h3 {
 			font-size: 1.1rem;
 			margin: 30px 0 10px;
 			color: var(--accent-yellow);
 		}
-
 		h4 {
 			font-size: 1rem;
 			margin: 20px 0 10px;
 			color: var(--text-primary);
 		}
-
 		p {
 			margin-bottom: 15px;
 			color: var(--text-secondary);
 		}
-
 		a {
 			color: var(--accent-blue);
 		}
-
 		code {
 			background: var(--bg-secondary);
 			padding: 2px 6px;
 			border-radius: 4px;
 			font-size: 0.9em;
 		}
-
 		pre {
 			background: var(--bg-terminal);
 			border: 1px solid var(--border-color);
@@ -168,56 +149,45 @@
 			overflow-x: auto;
 			margin: 15px 0;
 		}
-
 		pre code {
 			background: none;
 			padding: 0;
 		}
-
 		.cmd {
 			color: var(--accent-yellow);
 		}
-
 		.arg {
 			color: var(--accent-orange);
 		}
-
 		.opt {
 			color: var(--accent-blue);
 		}
-
 		.comment {
 			color: var(--text-muted);
 		}
-
 		.string {
 			color: var(--accent-green);
 		}
-
 		table {
 			width: 100%;
 			border-collapse: collapse;
 			margin: 20px 0;
 		}
-
 		th,
 		td {
 			text-align: left;
 			padding: 12px 15px;
 			border: 1px solid var(--border-color);
 		}
-
 		th {
 			background: var(--bg-secondary);
 			color: var(--accent-orange);
 			font-weight: 600;
 		}
-
 		td {
 			background: var(--bg-terminal);
 			color: var(--text-secondary);
 		}
-
 		.info-box {
 			background: rgba(77, 171, 247, 0.1);
 			border: 1px solid var(--accent-blue);
@@ -225,12 +195,10 @@
 			padding: 15px 20px;
 			margin: 20px 0;
 		}
-
 		.info-box p {
 			margin: 0;
 			color: var(--text-primary);
 		}
-
 		.warning-box {
 			background: rgba(255, 193, 7, 0.1);
 			border: 1px solid var(--accent-yellow);
@@ -238,23 +206,19 @@
 			padding: 15px 20px;
 			margin: 20px 0;
 		}
-
 		.warning-box p {
 			margin: 0;
 			color: var(--text-primary);
 		}
-
 		ul,
 		ol {
 			margin: 15px 0;
 			padding-left: 25px;
 			color: var(--text-secondary);
 		}
-
 		li {
 			margin-bottom: 8px;
 		}
-
 		/* Command card */
 		.command-card {
 			background: var(--bg-secondary);
@@ -263,16 +227,13 @@
 			padding: 20px;
 			margin: 20px 0;
 		}
-
 		.command-signature {
 			font-size: 1.1rem;
 			margin-bottom: 15px;
 		}
-
 		.option-list {
 			margin-top: 15px;
 		}
-
 		.option-item {
 			display: grid;
 			grid-template-columns: 180px 1fr;
@@ -280,37 +241,30 @@
 			padding: 10px 0;
 			border-bottom: 1px solid var(--border-color);
 		}
-
 		.option-item:last-child {
 			border-bottom: none;
 		}
-
 		.option-name {
 			color: var(--accent-blue);
 		}
-
 		.option-desc {
 			color: var(--text-secondary);
 		}
-
 		/* Responsive */
 		@media (max-width: 900px) {
 			.layout {
 				grid-template-columns: 1fr;
 			}
-
 			.sidebar {
 				position: relative;
 				height: auto;
 				border-right: none;
 				border-bottom: 1px solid var(--border-color);
 			}
-
 			.main-content {
 				padding: 30px 20px;
 			}
 		}
-
 		/* API Reference */
 		.api-class {
 			background: var(--bg-secondary);
@@ -319,40 +273,32 @@
 			margin: 20px 0;
 			overflow: hidden;
 		}
-
 		.api-class-header {
 			background: var(--bg-terminal);
 			padding: 15px 20px;
 			border-bottom: 1px solid var(--border-color);
 		}
-
 		.api-class-name {
 			color: var(--accent-yellow);
 			font-weight: 600;
 		}
-
 		.api-class-namespace {
 			color: var(--text-muted);
 			font-size: 0.85rem;
 		}
-
 		.api-class-body {
 			padding: 20px;
 		}
-
 		.api-method {
 			padding: 10px 0;
 			border-bottom: 1px solid var(--border-color);
 		}
-
 		.api-method:last-child {
 			border-bottom: none;
 		}
-
 		.api-method-sig {
 			color: var(--accent-blue);
 		}
-
 		.api-method-desc {
 			color: var(--text-secondary);
 			font-size: 0.9rem;
@@ -360,7 +306,6 @@
 		}
 	</style>
 </head>
-
 <body>
 	<div class="layout">
 		<aside class="sidebar">
@@ -368,7 +313,6 @@
 				<img src="../assets/icon_alpha.png" alt="Burner">
 				<span>BURNER</span>
 			</a>
-
 			<nav>
 				<div class="nav-section">
 					<div class="nav-section-title">Getting Started</div>
@@ -376,7 +320,6 @@
 					<a href="installation.html" class="nav-link">Installation</a>
 					<a href="quickstart.html" class="nav-link">Quick Start</a>
 				</div>
-
 				<div class="nav-section">
 					<div class="nav-section-title">Commands</div>
 					<a href="commands/new.html" class="nav-link">new</a>
@@ -388,13 +331,11 @@
 					<a href="commands/templates.html" class="nav-link">templates</a>
 					<a href="commands/stats.html" class="nav-link">stats</a>
 				</div>
-
 				<div class="nav-section">
 					<div class="nav-section-title">Advanced</div>
 					<a href="custom-templates.html" class="nav-link">Custom Templates</a>
 					<a href="configuration.html" class="nav-link">Configuration</a>
 				</div>
-
 				<div class="nav-section">
 					<div class="nav-section-title">API Reference</div>
 					<a href="api/services.html" class="nav-link">Services</a>
@@ -403,27 +344,21 @@
 				</div>
 			</nav>
 		</aside>
-
 		<main class="main-content">
 			<h1>Burner CLI Documentation</h1>
-
 			<p>
 				Welcome to the Burner CLI documentation. Burner is a command-line tool designed to help developers
 				quickly create, manage, and clean up temporary development projects.
 			</p>
-
 			<div class="info-box">
 				<p><strong>Current Version:</strong> <span id="currentVersion">...</span> | <strong>Requires:</strong>
 					.NET 10.0 or later</p>
 			</div>
-
 			<h2>What is Burner?</h2>
-
 			<p>
 				Burner is the home for your experimental projects. Whether you're testing a new library,
 				prototyping an idea, or following a tutorial, Burner helps you:
 			</p>
-
 			<ul>
 				<li><strong>Quickly scaffold</strong> projects using predefined or custom templates</li>
 				<li><strong>Keep organized</strong> with all projects in a unified directory</li>
@@ -431,40 +366,31 @@
 				<li><strong>Clean up automatically</strong> when experiments get old</li>
 				<li><strong>Import existing</strong> projects into your burner home</li>
 			</ul>
-
 			<h2>Quick Installation</h2>
-
 			<pre><code><span class="comment"># Install globally via .NET</span>
 <span class="cmd">dotnet tool install</span> <span class="opt">-g</span> <span class="arg">Burner-CLI</span>
-
 <span class="comment"># Verify installation</span>
 <span class="cmd">burner</span> <span class="arg">--version</span></code></pre>
-
 			<h2>Core Concepts</h2>
-
 			<h3>Projects</h3>
 			<p>
 				Every burner project lives in the <code>burnerHome</code> directory (default:
 				<code>~/.burner/projects</code>).
 				Projects are named with a date prefix: <code>YYMMDD-projectname</code> to track when they were created.
 			</p>
-
 			<h3>Templates</h3>
 			<p>
 				Templates are scripts that set up new projects. Burner includes built-in templates for common project
 				types
 				and supports custom templates written in PowerShell, Bash, Python, or any executable.
 			</p>
-
 			<h3>Auto-Cleanup</h3>
 			<p>
 				By default, Burner can automatically identify and remove projects older than a configurable number of
 				days.
 				This keeps your disk tidy without manual intervention.
 			</p>
-
 			<h2>Built-in Templates</h2>
-
 			<table>
 				<thead>
 					<tr>
@@ -483,13 +409,10 @@
 					</tr>
 				</tbody>
 			</table>
-
 			<p>
 				See <a href="custom-templates.html">Custom Templates</a> to learn how to create your own templates.
 			</p>
-
 			<h2>Command Overview</h2>
-
 			<table>
 				<thead>
 					<tr>
@@ -532,9 +455,7 @@
 					</tr>
 				</tbody>
 			</table>
-
 			<h2>Next Steps</h2>
-
 			<ul>
 				<li><a href="installation.html">Installation Guide</a> - Detailed installation instructions</li>
 				<li><a href="quickstart.html">Quick Start Tutorial</a> - Create your first project</li>
@@ -557,5 +478,4 @@
 		})();
 	</script>
 </body>
-
 </html>

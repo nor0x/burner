@@ -5,99 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>burner list - Burner CLI Docs</title>
     <link rel="icon" type="image/png" href="../../assets/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="layout">
-        <aside class="sidebar">
-            <a href="../../" class="sidebar-logo">
-                <img src="../../assets/icon_alpha.png" alt="Burner">
-                <span>BURNER</span>
-            </a>
-            <nav>
-                <div class="nav-section">
-                    <div class="nav-section-title">Getting Started</div>
-                    <a href="../" class="nav-link">Overview</a>
-                    <a href="../installation.html" class="nav-link">Installation</a>
-                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Commands</div>
-                    <a href="new.html" class="nav-link">new</a>
-                    <a href="list.html" class="nav-link active">list</a>
-                    <a href="burn.html" class="nav-link">burn</a>
-                    <a href="open.html" class="nav-link">open</a>
-                    <a href="import.html" class="nav-link">import</a>
-                    <a href="config.html" class="nav-link">config</a>
-                    <a href="templates.html" class="nav-link">templates</a>
-                    <a href="stats.html" class="nav-link">stats</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Advanced</div>
-                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
-                    <a href="../configuration.html" class="nav-link">Configuration</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">API Reference</div>
-                    <a href="../api/services.html" class="nav-link">Services</a>
-                    <a href="../api/models.html" class="nav-link">Models</a>
-                    <a href="../api/commands.html" class="nav-link">Commands</a>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <h1>burner list</h1>
-            <p>List all burner projects with their age and template information.</p>
-
-            <div class="command-card">
-                <div class="command-signature">
-                    <span class="cmd">burner</span> <span class="arg">list</span> <span class="opt">[options]</span>
-                </div>
-            </div>
-
-            <h2>Aliases</h2>
-            <p><code>burner ls</code></p>
-
-            <h2>Options</h2>
-            <table>
-                <thead>
-                    <tr><th>Option</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>-a, --all</code></td>
-                        <td>Show all details including full paths</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2>Examples</h2>
-            <pre><code><span class="comment"># List all projects</span>
+       <aside class="sidebar">
+          <a href="../../" class="sidebar-logo">
+             <img src="../../assets/icon_alpha.png" alt="Burner">
+             <span>BURNER</span>
+          </a>
+          <nav>
+             <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="../" class="nav-link">Overview</a>
+                <a href="../installation.html" class="nav-link">Installation</a>
+                <a href="../quickstart.html" class="nav-link">Quick Start</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Commands</div>
+                <a href="new.html" class="nav-link">new</a>
+                <a href="list.html" class="nav-link active">list</a>
+                <a href="burn.html" class="nav-link">burn</a>
+                <a href="open.html" class="nav-link">open</a>
+                <a href="import.html" class="nav-link">import</a>
+                <a href="config.html" class="nav-link">config</a>
+                <a href="templates.html" class="nav-link">templates</a>
+                <a href="stats.html" class="nav-link">stats</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Advanced</div>
+                <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                <a href="../configuration.html" class="nav-link">Configuration</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">API Reference</div>
+                <a href="../api/services.html" class="nav-link">Services</a>
+                <a href="../api/models.html" class="nav-link">Models</a>
+                <a href="../api/commands.html" class="nav-link">Commands</a>
+             </div>
+          </nav>
+       </aside>
+       <main class="main-content">
+          <h1>burner list</h1>
+          <p>List all burner projects with their age and template information.</p>
+          <div class="command-card">
+             <div class="command-signature">
+                <span class="cmd">burner</span> <span class="arg">list</span> <span class="opt">[options]</span>
+             </div>
+          </div>
+          <h2>Aliases</h2>
+          <p><code>burner ls</code></p>
+          <h2>Options</h2>
+          <table>
+             <thead>
+                <tr><th>Option</th><th>Description</th></tr>
+             </thead>
+             <tbody>
+                <tr>
+                    <td><code>-a, --all</code></td>
+                    <td>Show all details including full paths</td>
+                </tr>
+             </tbody>
+          </table>
+          <h2>Examples</h2>
+          <pre><code><span class="comment"># List all projects</span>
 <span class="cmd">burner list</span>
-
 <span class="comment"># Using alias</span>
 <span class="cmd">burner ls</span>
-
 <span class="comment"># Show full paths</span>
 <span class="cmd">burner list</span> <span class="opt">-a</span></code></pre>
-
-            <h2>Output</h2>
-            <p>Projects are displayed in a table with:</p>
-            <ul>
-                <li><strong>Name</strong> - The project folder name (YYMMDD-name format)</li>
-                <li><strong>Template</strong> - The template used to create the project</li>
-                <li><strong>Age</strong> - Color-coded age indicator:
-                    <ul>
-                        <li><span style="color: var(--accent-green);">Green</span> - Less than 7 days</li>
-                        <li><span style="color: var(--accent-yellow);">Yellow</span> - 7-30 days</li>
-                        <li><span style="color: var(--accent-red);">Red</span> - More than 30 days</li>
-                    </ul>
-                </li>
-                <li><strong>Path</strong> (with <code>-a</code>) - Full filesystem path</li>
-            </ul>
-        </main>
+          <h2>Output</h2>
+          <p>Projects are displayed in a table with:</p>
+          <ul>
+             <li><strong>Name</strong> - The project folder name (YYMMDD-name format)</li>
+             <li><strong>Template</strong> - The template used to create the project</li>
+             <li><strong>Age</strong> - Color-coded age indicator:
+                <ul>
+                    <li><span style="color: var(--accent-green);">Green</span> - Less than 7 days</li>
+                    <li><span style="color: var(--accent-yellow);">Yellow</span> - 7-30 days</li>
+                    <li><span style="color: var(--accent-red);">Red</span> - More than 30 days</li>
+                </ul>
+             </li>
+             <li><strong>Path</strong> (with <code>-a</code>) - Full filesystem path</li>
+          </ul>
+       </main>
     </div>
 </body>
 </html>

@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Iosevka';
+    src: url('../assets/Iosevka-Extended.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --bg-primary: #0d0d0d;
     --bg-secondary: #1a1a1a;
@@ -20,7 +28,7 @@
 }
 
 body {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Iosevka', monospace;
     background: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.7;

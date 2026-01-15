@@ -5,133 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services API - Burner CLI Docs</title>
     <link rel="icon" type="image/png" href="../../assets/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="layout">
-        <aside class="sidebar">
-            <a href="../../" class="sidebar-logo">
-                <img src="../../assets/icon_alpha.png" alt="Burner">
-                <span>BURNER</span>
-            </a>
-            <nav>
-                <div class="nav-section">
-                    <div class="nav-section-title">Getting Started</div>
-                    <a href="../" class="nav-link">Overview</a>
-                    <a href="../installation.html" class="nav-link">Installation</a>
-                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Commands</div>
-                    <a href="../commands/new.html" class="nav-link">new</a>
-                    <a href="../commands/list.html" class="nav-link">list</a>
-                    <a href="../commands/burn.html" class="nav-link">burn</a>
-                    <a href="../commands/open.html" class="nav-link">open</a>
-                    <a href="../commands/import.html" class="nav-link">import</a>
-                    <a href="../commands/config.html" class="nav-link">config</a>
-                    <a href="../commands/templates.html" class="nav-link">templates</a>
-                    <a href="../commands/stats.html" class="nav-link">stats</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Advanced</div>
-                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
-                    <a href="../configuration.html" class="nav-link">Configuration</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">API Reference</div>
-                    <a href="services.html" class="nav-link active">Services</a>
-                    <a href="models.html" class="nav-link">Models</a>
-                    <a href="commands.html" class="nav-link">Commands</a>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <h1>Services API Reference</h1>
+       <aside class="sidebar">
+          <a href="../../" class="sidebar-logo">
+             <img src="../../assets/icon_alpha.png" alt="Burner">
+             <span>BURNER</span>
+          </a>
+          <nav>
+             <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="../" class="nav-link">Overview</a>
+                <a href="../installation.html" class="nav-link">Installation</a>
+                <a href="../quickstart.html" class="nav-link">Quick Start</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Commands</div>
+                <a href="../commands/new.html" class="nav-link">new</a>
+                <a href="../commands/list.html" class="nav-link">list</a>
+                <a href="../commands/burn.html" class="nav-link">burn</a>
+                <a href="../commands/open.html" class="nav-link">open</a>
+                <a href="../commands/import.html" class="nav-link">import</a>
+                <a href="../commands/config.html" class="nav-link">config</a>
+                <a href="../commands/templates.html" class="nav-link">templates</a>
+                <a href="../commands/stats.html" class="nav-link">stats</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Advanced</div>
+                <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                <a href="../configuration.html" class="nav-link">Configuration</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">API Reference</div>
+                <a href="services.html" class="nav-link active">Services</a>
+                <a href="models.html" class="nav-link">Models</a>
+                <a href="commands.html" class="nav-link">Commands</a>
+             </div>
+          </nav>
+       </aside>
+       <main class="main-content">
+          <h1>Services API Reference</h1>
 <p>Core service classes that power Burner CLI functionality.</p>
-
 <!-- AUTO-GENERATED FROM SOURCE CODE - DO NOT EDIT MANUALLY -->
 <!-- Generated from XML documentation comments -->
-
 <div class="api-class">
     <div class="api-class-header">
-        <div class="api-class-name">ProjectService</div>
-        <div class="api-class-namespace">Burner.Services</div>
+       <div class="api-class-name">ProjectService</div>
+       <div class="api-class-namespace">Burner.Services</div>
     </div>
     <div class="api-class-body">
-        <p>Manages burner projects - listing, retrieving, deleting, and importing.</p>
-        <h4>Constructor</h4>
-        <div class="api-method">
-            <code class="api-method-sig">ProjectService(BurnerConfig config)</code>
-            <p class="api-method-desc">Creates a new instance of the ProjectService.</p>
-        </div>
-        <h4>Methods</h4>
-        <div class="api-method">
-            <code class="api-method-sig">GetAllProjects()</code>
-            <p class="api-method-desc">Returns all projects in the burner home directory, sorted by creation date (newest first). Returns: An enumerable of all burner projects.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">GetProject(String name)</code>
-            <p class="api-method-desc">Gets a project by name. Supports partial name matching (suffix match). Returns: The matching project, or null if not found.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">CleanupProjects(Int32? days)</code>
-            <p class="api-method-desc">Deletes projects older than the specified days. Uses config default if not provided. Returns: Count of deleted projects.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">DeleteProject(String name)</code>
-            <p class="api-method-desc">Deletes a project by name. Returns: True if successful, false otherwise.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">GetImportDestinationPath(String projectName)</code>
-            <p class="api-method-desc">Gets the destination path for an import operation without performing the import. Returns: The destination path, or null if destination already exists.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">ImportProject(String sourceDir, String destinationPath, Boolean copy)</code>
-            <p class="api-method-desc">Imports a directory to burner home. Moves by default, copies if specified. Returns: A tuple containing success status and the resulting path.</p>
-        </div>
+       <p>Manages burner projects - listing, retrieving, deleting, and importing.</p>
+       <h4>Constructor</h4>
+       <div class="api-method">
+          <code class="api-method-sig">ProjectService(BurnerConfig config)</code>
+          <p class="api-method-desc">Creates a new instance of the ProjectService.</p>
+       </div>
+       <h4>Methods</h4>
+       <div class="api-method">
+          <code class="api-method-sig">GetAllProjects()</code>
+          <p class="api-method-desc">Returns all projects in the burner home directory, sorted by creation date (newest first). Returns: An enumerable of all burner projects.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">GetProject(String name)</code>
+          <p class="api-method-desc">Gets a project by name. Supports partial name matching (suffix match). Returns: The matching project, or null if not found.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">CleanupProjects(Int32? days)</code>
+          <p class="api-method-desc">Deletes projects older than the specified days. Uses config default if not provided. Returns: Count of deleted projects.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">DeleteProject(String name)</code>
+          <p class="api-method-desc">Deletes a project by name. Returns: True if successful, false otherwise.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">GetImportDestinationPath(String projectName)</code>
+          <p class="api-method-desc">Gets the destination path for an import operation without performing the import. Returns: The destination path, or null if destination already exists.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">ImportProject(String sourceDir, String destinationPath, Boolean copy)</code>
+          <p class="api-method-desc">Imports a directory to burner home. Moves by default, copies if specified. Returns: A tuple containing success status and the resulting path.</p>
+       </div>
     </div>
 </div>
-
 <div class="api-class">
     <div class="api-class-header">
-        <div class="api-class-name">TemplateService</div>
-        <div class="api-class-namespace">Burner.Services</div>
+       <div class="api-class-name">TemplateService</div>
+       <div class="api-class-namespace">Burner.Services</div>
     </div>
     <div class="api-class-body">
-        <p>Manages templates - listing, creating projects, and handling built-in/custom templates.</p>
-        <h4>Constructor</h4>
-        <div class="api-method">
-            <code class="api-method-sig">TemplateService(BurnerConfig config)</code>
-            <p class="api-method-desc">Creates a new instance. Ensures built-in templates exist in the templates directory.</p>
-        </div>
-        <h4>Methods</h4>
-        <div class="api-method">
-            <code class="api-method-sig">GetAvailableTemplates()</code>
-            <p class="api-method-desc">Returns template names (without file extensions). Returns: An enumerable of available template names.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">GetAvailableTemplatesWithDetails()</code>
-            <p class="api-method-desc">Returns templates with full details including filename and built-in status. Returns: An enumerable of tuples containing template name, filename, and built-in status.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">IsInteractiveTemplate(String template)</code>
-            <p class="api-method-desc">Checks if a template requires interactive mode by looking for BURNER_INTERACTIVE marker. Returns: True if the template requires interactive mode.</p>
-        </div>
-        <div class="api-method">
-            <code class="api-method-sig">CreateProject(String template, String name, String targetDirectory, Boolean interactive)</code>
-            <p class="api-method-desc">Creates a new project from a template. Returns: True if the project was created successfully.</p>
-        </div>
+       <p>Manages templates - listing, creating projects, and handling built-in/custom templates.</p>
+       <h4>Constructor</h4>
+       <div class="api-method">
+          <code class="api-method-sig">TemplateService(BurnerConfig config)</code>
+          <p class="api-method-desc">Creates a new instance. Ensures built-in templates exist in the templates directory.</p>
+       </div>
+       <h4>Methods</h4>
+       <div class="api-method">
+          <code class="api-method-sig">GetAvailableTemplates()</code>
+          <p class="api-method-desc">Returns template names (without file extensions). Returns: An enumerable of available template names.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">GetAvailableTemplatesWithDetails()</code>
+          <p class="api-method-desc">Returns templates with full details including filename and built-in status. Returns: An enumerable of tuples containing template name, filename, and built-in status.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">IsInteractiveTemplate(String template)</code>
+          <p class="api-method-desc">Checks if a template requires interactive mode by looking for BURNER_INTERACTIVE marker. Returns: True if the template requires interactive mode.</p>
+       </div>
+       <div class="api-method">
+          <code class="api-method-sig">CreateProject(String template, String name, String targetDirectory, Boolean interactive)</code>
+          <p class="api-method-desc">Creates a new project from a template. Returns: True if the project was created successfully.</p>
+       </div>
     </div>
 </div>
-
 <h2>Source Files</h2>
 <ul>
     <li><a href="https://github.com/nor0x/burner/blob/main/Burner/Services/ProjectService.cs">Burner/Services/ProjectService.cs</a></li>
     <li><a href="https://github.com/nor0x/burner/blob/main/Burner/Services/TemplateService.cs">Burner/Services/TemplateService.cs</a></li>
 </ul>
-        </main>
+       </main>
     </div>
 </body>
 </html>

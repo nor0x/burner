@@ -5,152 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Templates - Burner CLI Docs</title>
     <link rel="icon" type="image/png" href="../assets/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="layout">
-        <aside class="sidebar">
-            <a href="../" class="sidebar-logo">
-                <img src="../assets/icon_alpha.png" alt="Burner">
-                <span>BURNER</span>
-            </a>
-            <nav>
-                <div class="nav-section">
-                    <div class="nav-section-title">Getting Started</div>
-                    <a href="./" class="nav-link">Overview</a>
-                    <a href="installation.html" class="nav-link">Installation</a>
-                    <a href="quickstart.html" class="nav-link">Quick Start</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Commands</div>
-                    <a href="commands/new.html" class="nav-link">new</a>
-                    <a href="commands/list.html" class="nav-link">list</a>
-                    <a href="commands/burn.html" class="nav-link">burn</a>
-                    <a href="commands/open.html" class="nav-link">open</a>
-                    <a href="commands/import.html" class="nav-link">import</a>
-                    <a href="commands/config.html" class="nav-link">config</a>
-                    <a href="commands/templates.html" class="nav-link">templates</a>
-                    <a href="commands/stats.html" class="nav-link">stats</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Advanced</div>
-                    <a href="custom-templates.html" class="nav-link active">Custom Templates</a>
-                    <a href="configuration.html" class="nav-link">Configuration</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">API Reference</div>
-                    <a href="api/services.html" class="nav-link">Services</a>
-                    <a href="api/models.html" class="nav-link">Models</a>
-                    <a href="api/commands.html" class="nav-link">Commands</a>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <h1>Custom Templates</h1>
-            <p>Extend Burner with your own project templates using any scripting language.</p>
-
-            <h2>Template Requirements</h2>
-            <ul>
-                <li>Scripts can be written in any language (bash, PowerShell, Python, etc.)</li>
-                <li>Must be executable from the command line</li>
-                <li>Script filename becomes the template alias (e.g., <code>react.ps1</code> &rarr; <code>react</code>)</li>
-                <li>Supported extensions: <code>.ps1</code>, <code>.sh</code>, <code>.py</code>, <code>.bat</code>, <code>.cmd</code>, <code>.exe</code></li>
-            </ul>
-
-            <h2>Template Location</h2>
-            <p>Place template scripts in the templates directory:</p>
-            <pre><code><span class="comment"># Default location</span>
+       <aside class="sidebar">
+          <a href="../" class="sidebar-logo">
+             <img src="../assets/icon_alpha.png" alt="Burner">
+             <span>BURNER</span>
+          </a>
+          <nav>
+             <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="./" class="nav-link">Overview</a>
+                <a href="installation.html" class="nav-link">Installation</a>
+                <a href="quickstart.html" class="nav-link">Quick Start</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Commands</div>
+                <a href="commands/new.html" class="nav-link">new</a>
+                <a href="commands/list.html" class="nav-link">list</a>
+                <a href="commands/burn.html" class="nav-link">burn</a>
+                <a href="commands/open.html" class="nav-link">open</a>
+                <a href="commands/import.html" class="nav-link">import</a>
+                <a href="commands/config.html" class="nav-link">config</a>
+                <a href="commands/templates.html" class="nav-link">templates</a>
+                <a href="commands/stats.html" class="nav-link">stats</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Advanced</div>
+                <a href="custom-templates.html" class="nav-link active">Custom Templates</a>
+                <a href="configuration.html" class="nav-link">Configuration</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">API Reference</div>
+                <a href="api/services.html" class="nav-link">Services</a>
+                <a href="api/models.html" class="nav-link">Models</a>
+                <a href="api/commands.html" class="nav-link">Commands</a>
+             </div>
+          </nav>
+       </aside>
+       <main class="main-content">
+          <h1>Custom Templates</h1>
+          <p>Extend Burner with your own project templates using any scripting language.</p>
+          <h2>Template Requirements</h2>
+          <ul>
+             <li>Scripts can be written in any language (bash, PowerShell, Python, etc.)</li>
+             <li>Must be executable from the command line</li>
+             <li>Script filename becomes the template alias (e.g., <code>react.ps1</code> &rarr; <code>react</code>)</li>
+             <li>Supported extensions: <code>.ps1</code>, <code>.sh</code>, <code>.py</code>, <code>.bat</code>, <code>.cmd</code>, <code>.exe</code></li>
+          </ul>
+          <h2>Template Location</h2>
+          <p>Place template scripts in the templates directory:</p>
+          <pre><code><span class="comment"># Default location</span>
 ~/.burner/templates/
-
 <span class="comment"># Open in file explorer</span>
 <span class="cmd">burner config</span> <span class="opt">--open-templates</span></code></pre>
-
-            <h2>Environment Variables</h2>
-            <p>Burner sets these environment variables before running your template:</p>
-            <table>
-                <thead>
-                    <tr><th>Variable</th><th>Description</th><th>Example</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>BURNER_NAME</code></td>
-                        <td>User-provided project name</td>
-                        <td><code>my-experiment</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>BURNER_PATH</code></td>
-                        <td>Full path to project directory</td>
-                        <td><code>~/.burner/projects/260115-my-experiment</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>BURNER_DATED_NAME</code></td>
-                        <td>Dated folder name</td>
-                        <td><code>260115-my-experiment</code></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>The working directory is automatically set to <code>BURNER_PATH</code>.</p>
-
-            <h2>Interactive Templates</h2>
-            <p>Some templates (like Vite-based ones) require user input. Add a marker comment in the first 10 lines:</p>
-            <pre><code><span class="comment"># BURNER_INTERACTIVE</span></code></pre>
-            <p>This automatically enables interactive mode when using the template.</p>
-
-            <h2>Example Templates</h2>
-
-            <h3>PowerShell - React with Vite</h3>
-            <pre><code><span class="comment">#!/usr/bin/env pwsh</span>
+          <h2>Environment Variables</h2>
+          <p>Burner sets these environment variables before running your template:</p>
+          <table>
+             <thead>
+                <tr><th>Variable</th><th>Description</th><th>Example</th></tr>
+             </thead>
+             <tbody>
+                <tr>
+                    <td><code>BURNER_NAME</code></td>
+                    <td>User-provided project name</td>
+                    <td><code>my-experiment</code></td>
+                </tr>
+                <tr>
+                    <td><code>BURNER_PATH</code></td>
+                    <td>Full path to project directory</td>
+                    <td><code>~/.burner/projects/260115-my-experiment</code></td>
+                </tr>
+                <tr>
+                    <td><code>BURNER_DATED_NAME</code></td>
+                    <td>Dated folder name</td>
+                    <td><code>260115-my-experiment</code></td>
+                </tr>
+             </tbody>
+          </table>
+          <p>The working directory is automatically set to <code>BURNER_PATH</code>.</p>
+          <h2>Interactive Templates</h2>
+          <p>Some templates (like Vite-based ones) require user input. Add a marker comment in the first 10 lines:</p>
+          <pre><code><span class="comment"># BURNER_INTERACTIVE</span></code></pre>
+          <p>This automatically enables interactive mode when using the template.</p>
+          <h2>Example Templates</h2>
+          <h3>PowerShell - React with Vite</h3>
+          <pre><code><span class="comment">#!/usr/bin/env pwsh</span>
 <span class="comment"># react.ps1 - Creates a React app using Vite</span>
 Set-Location $env:BURNER_PATH
 echo <span class="string">"y"</span> | npm create vite@latest $env:BURNER_DATED_NAME -y -- --template react --no-rolldown
 Set-Location $env:BURNER_DATED_NAME
 npm install</code></pre>
-
-            <h3>PowerShell - Svelte (Interactive)</h3>
-            <pre><code><span class="comment">#!/usr/bin/env pwsh</span>
+          <h3>PowerShell - Svelte (Interactive)</h3>
+          <pre><code><span class="comment">#!/usr/bin/env pwsh</span>
 <span class="comment"># BURNER_INTERACTIVE</span>
 <span class="comment"># svelte.ps1 - Creates a Svelte app</span>
 Set-Location $env:BURNER_PATH
 npm create vite@latest . -- --template svelte-ts
 npm install
 npm pkg set name=$env:BURNER_NAME</code></pre>
-
-            <h3>Bash - React</h3>
-            <pre><code><span class="comment">#!/bin/bash</span>
+          <h3>Bash - React</h3>
+          <pre><code><span class="comment">#!/bin/bash</span>
 <span class="comment"># Creates a React app using Vite</span>
 set -e
 npm create vite@latest . -- --template react
 npm install</code></pre>
-
-            <h3>Python - Simple Project</h3>
-            <pre><code><span class="comment">#!/usr/bin/env python3</span>
+          <h3>Python - Simple Project</h3>
+          <pre><code><span class="comment">#!/usr/bin/env python3</span>
 import os
-
 name = os.environ[<span class="string">'BURNER_NAME'</span>]
-
 with open(<span class="string">'main.py'</span>, <span class="string">'w'</span>) as f:
     f.write(f<span class="string">'# {name}\nprint("Hello from {name}!")\n'</span>)
-
 with open(<span class="string">'requirements.txt'</span>, <span class="string">'w'</span>) as f:
     f.write(<span class="string">''</span>)</code></pre>
-
-            <h3>PowerShell - .NET with Extra Setup</h3>
-            <pre><code><span class="comment">#!/usr/bin/env pwsh</span>
+          <h3>PowerShell - .NET with Extra Setup</h3>
+          <pre><code><span class="comment">#!/usr/bin/env pwsh</span>
 <span class="comment"># dotnet-api.ps1 - Creates a .NET Web API project</span>
 dotnet new webapi -o .
 dotnet add package Swashbuckle.AspNetCore
 dotnet restore</code></pre>
-
-            <h2>Tips</h2>
-            <ul>
-                <li>Use <code>$env:BURNER_PATH</code> (PowerShell) or <code>$BURNER_PATH</code> (Bash) for the project path</li>
-                <li>The script's exit code determines success (0) or failure (non-zero)</li>
-                <li>Test templates manually before adding to Burner</li>
-                <li>Use <code>burner templates</code> to verify your template is detected</li>
-            </ul>
-        </main>
+          <h2>Tips</h2>
+          <ul>
+             <li>Use <code>$env:BURNER_PATH</code> (PowerShell) or <code>$BURNER_PATH</code> (Bash) for the project path</li>
+             <li>The script's exit code determines success (0) or failure (non-zero)</li>
+             <li>Test templates manually before adding to Burner</li>
+             <li>Use <code>burner templates</code> to verify your template is detected</li>
+          </ul>
+       </main>
     </div>
 </body>
 </html>

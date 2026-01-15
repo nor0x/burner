@@ -5,159 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>burner config - Burner CLI Docs</title>
     <link rel="icon" type="image/png" href="../../assets/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="layout">
-        <aside class="sidebar">
-            <a href="../../" class="sidebar-logo">
-                <img src="../../assets/icon_alpha.png" alt="Burner">
-                <span>BURNER</span>
-            </a>
-            <nav>
-                <div class="nav-section">
-                    <div class="nav-section-title">Getting Started</div>
-                    <a href="../" class="nav-link">Overview</a>
-                    <a href="../installation.html" class="nav-link">Installation</a>
-                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Commands</div>
-                    <a href="new.html" class="nav-link">new</a>
-                    <a href="list.html" class="nav-link">list</a>
-                    <a href="burn.html" class="nav-link">burn</a>
-                    <a href="open.html" class="nav-link">open</a>
-                    <a href="import.html" class="nav-link">import</a>
-                    <a href="config.html" class="nav-link active">config</a>
-                    <a href="templates.html" class="nav-link">templates</a>
-                    <a href="stats.html" class="nav-link">stats</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Advanced</div>
-                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
-                    <a href="../configuration.html" class="nav-link">Configuration</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">API Reference</div>
-                    <a href="../api/services.html" class="nav-link">Services</a>
-                    <a href="../api/models.html" class="nav-link">Models</a>
-                    <a href="../api/commands.html" class="nav-link">Commands</a>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <h1>burner config</h1>
-            <p>View and update Burner configuration settings.</p>
-
-            <div class="command-card">
-                <div class="command-signature">
-                    <span class="cmd">burner</span> <span class="arg">config</span> <span class="opt">[options]</span>
-                </div>
-            </div>
-
-            <h2>Options</h2>
-            <table>
-                <thead>
-                    <tr><th>Option</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>--home &lt;PATH&gt;</code></td>
-                        <td>Set the burner home directory</td>
-                    </tr>
-                    <tr>
-                        <td><code>--templates &lt;PATH&gt;</code></td>
-                        <td>Set the burner templates directory</td>
-                    </tr>
-                    <tr>
-                        <td><code>--auto-clean-days &lt;DAYS&gt;</code></td>
-                        <td>Set cleanup threshold (0 to disable)</td>
-                    </tr>
-                    <tr>
-                        <td><code>--editor &lt;EDITOR&gt;</code></td>
-                        <td>Set default editor command</td>
-                    </tr>
-                    <tr>
-                        <td><code>--show</code></td>
-                        <td>Show current configuration</td>
-                    </tr>
-                    <tr>
-                        <td><code>--path</code></td>
-                        <td>Show config file path</td>
-                    </tr>
-                    <tr>
-                        <td><code>--open-templates</code></td>
-                        <td>Open templates directory in file explorer</td>
-                    </tr>
-                    <tr>
-                        <td><code>--open-home</code></td>
-                        <td>Open burner home directory in file explorer</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2>Examples</h2>
-            <pre><code><span class="comment"># Show current config</span>
+       <aside class="sidebar">
+          <a href="../../" class="sidebar-logo">
+             <img src="../../assets/icon_alpha.png" alt="Burner">
+             <span>BURNER</span>
+          </a>
+          <nav>
+             <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="../" class="nav-link">Overview</a>
+                <a href="../installation.html" class="nav-link">Installation</a>
+                <a href="../quickstart.html" class="nav-link">Quick Start</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Commands</div>
+                <a href="new.html" class="nav-link">new</a>
+                <a href="list.html" class="nav-link">list</a>
+                <a href="burn.html" class="nav-link">burn</a>
+                <a href="open.html" class="nav-link">open</a>
+                <a href="import.html" class="nav-link">import</a>
+                <a href="config.html" class="nav-link active">config</a>
+                <a href="templates.html" class="nav-link">templates</a>
+                <a href="stats.html" class="nav-link">stats</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Advanced</div>
+                <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                <a href="../configuration.html" class="nav-link">Configuration</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">API Reference</div>
+                <a href="../api/services.html" class="nav-link">Services</a>
+                <a href="../api/models.html" class="nav-link">Models</a>
+                <a href="../api/commands.html" class="nav-link">Commands</a>
+             </div>
+          </nav>
+       </aside>
+       <main class="main-content">
+          <h1>burner config</h1>
+          <p>View and update Burner configuration settings.</p>
+          <div class="command-card">
+             <div class="command-signature">
+                <span class="cmd">burner</span> <span class="arg">config</span> <span class="opt">[options]</span>
+             </div>
+          </div>
+          <h2>Options</h2>
+          <table>
+             <thead>
+                <tr><th>Option</th><th>Description</th></tr>
+             </thead>
+             <tbody>
+                <tr>
+                    <td><code>--home &lt;PATH&gt;</code></td>
+                    <td>Set the burner home directory</td>
+                </tr>
+                <tr>
+                    <td><code>--templates &lt;PATH&gt;</code></td>
+                    <td>Set the burner templates directory</td>
+                </tr>
+                <tr>
+                    <td><code>--auto-clean-days &lt;DAYS&gt;</code></td>
+                    <td>Set cleanup threshold (0 to disable)</td>
+                </tr>
+                <tr>
+                    <td><code>--editor &lt;EDITOR&gt;</code></td>
+                    <td>Set default editor command</td>
+                </tr>
+                <tr>
+                    <td><code>--show</code></td>
+                    <td>Show current configuration</td>
+                </tr>
+                <tr>
+                    <td><code>--path</code></td>
+                    <td>Show config file path</td>
+                </tr>
+                <tr>
+                    <td><code>--open-templates</code></td>
+                    <td>Open templates directory in file explorer</td>
+                </tr>
+                <tr>
+                    <td><code>--open-home</code></td>
+                    <td>Open burner home directory in file explorer</td>
+                </tr>
+             </tbody>
+          </table>
+          <h2>Examples</h2>
+          <pre><code><span class="comment"># Show current config</span>
 <span class="cmd">burner config</span>
-
 <span class="comment"># Set burner home directory</span>
 <span class="cmd">burner config</span> <span class="opt">--home</span> <span class="string">~/projects</span>
-
 <span class="comment"># Set templates directory</span>
 <span class="cmd">burner config</span> <span class="opt">--templates</span> <span class="string">~/tpl</span>
-
 <span class="comment"># Set cleanup threshold</span>
 <span class="cmd">burner config</span> <span class="opt">--auto-clean-days</span> <span class="string">60</span>
-
 <span class="comment"># Set editor</span>
 <span class="cmd">burner config</span> <span class="opt">--editor</span> <span class="string">cursor</span>
-
 <span class="comment"># Open burner home in explorer</span>
 <span class="cmd">burner config</span> <span class="opt">--open-home</span>
-
 <span class="comment"># Open templates dir in explorer</span>
 <span class="cmd">burner config</span> <span class="opt">--open-templates</span></code></pre>
-
-            <h2>Configuration Options</h2>
-            <table>
-                <thead>
-                    <tr><th>Setting</th><th>Description</th><th>Default</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>burnerHome</code></td>
-                        <td>Where new projects are created</td>
-                        <td><code>~/.burner/projects</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>burnerTemplates</code></td>
-                        <td>Where custom template scripts are stored</td>
-                        <td><code>~/.burner/templates</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>autoCleanDays</code></td>
-                        <td>Auto-remove projects older than this (0 to disable)</td>
-                        <td><code>30</code></td>
-                    </tr>
-                    <tr>
-                        <td><code>editor</code></td>
-                        <td>Default editor command for opening projects</td>
-                        <td><code>code</code></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2>Config File</h2>
-            <p>Configuration is stored at <code>~/.burner/config.json</code>:</p>
-            <pre><code>{
+          <h2>Configuration Options</h2>
+          <table>
+             <thead>
+                <tr><th>Setting</th><th>Description</th><th>Default</th></tr>
+             </thead>
+             <tbody>
+                <tr>
+                    <td><code>burnerHome</code></td>
+                    <td>Where new projects are created</td>
+                    <td><code>~/.burner/projects</code></td>
+                </tr>
+                <tr>
+                    <td><code>burnerTemplates</code></td>
+                    <td>Where custom template scripts are stored</td>
+                    <td><code>~/.burner/templates</code></td>
+                </tr>
+                <tr>
+                    <td><code>autoCleanDays</code></td>
+                    <td>Auto-remove projects older than this (0 to disable)</td>
+                    <td><code>30</code></td>
+                </tr>
+                <tr>
+                    <td><code>editor</code></td>
+                    <td>Default editor command for opening projects</td>
+                    <td><code>code</code></td>
+                </tr>
+             </tbody>
+          </table>
+          <h2>Config File</h2>
+          <p>Configuration is stored at <code>~/.burner/config.json</code>:</p>
+          <pre><code>{
   <span class="string">"burnerHome"</span>: <span class="string">"~/.burner/projects"</span>,
   <span class="string">"burnerTemplates"</span>: <span class="string">"~/.burner/templates"</span>,
   <span class="string">"autoCleanDays"</span>: <span class="arg">30</span>,
   <span class="string">"editor"</span>: <span class="string">"code"</span>
 }</code></pre>
-        </main>
+       </main>
     </div>
 </body>
 </html>

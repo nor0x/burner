@@ -5,100 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Start - Burner CLI Docs</title>
     <link rel="icon" type="image/png" href="../assets/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="layout">
-        <aside class="sidebar">
-            <a href="../" class="sidebar-logo">
-                <img src="../assets/icon_alpha.png" alt="Burner">
-                <span>BURNER</span>
-            </a>
-            <nav>
-                <div class="nav-section">
-                    <div class="nav-section-title">Getting Started</div>
-                    <a href="./" class="nav-link">Overview</a>
-                    <a href="installation.html" class="nav-link">Installation</a>
-                    <a href="quickstart.html" class="nav-link active">Quick Start</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Commands</div>
-                    <a href="commands/new.html" class="nav-link">new</a>
-                    <a href="commands/list.html" class="nav-link">list</a>
-                    <a href="commands/burn.html" class="nav-link">burn</a>
-                    <a href="commands/open.html" class="nav-link">open</a>
-                    <a href="commands/import.html" class="nav-link">import</a>
-                    <a href="commands/config.html" class="nav-link">config</a>
-                    <a href="commands/templates.html" class="nav-link">templates</a>
-                    <a href="commands/stats.html" class="nav-link">stats</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">Advanced</div>
-                    <a href="custom-templates.html" class="nav-link">Custom Templates</a>
-                    <a href="configuration.html" class="nav-link">Configuration</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">API Reference</div>
-                    <a href="api/services.html" class="nav-link">Services</a>
-                    <a href="api/models.html" class="nav-link">Models</a>
-                    <a href="api/commands.html" class="nav-link">Commands</a>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <h1>Quick Start</h1>
-            <p>Get up and running with Burner in under 5 minutes.</p>
-
-            <h2>1. Install Burner</h2>
-            <pre><code><span class="cmd">dotnet tool install</span> <span class="opt">-g</span> <span class="arg">Burner-CLI</span></code></pre>
-
-            <h2>2. Create Your First Project</h2>
-            <pre><code><span class="comment"># Create a .NET console app</span>
+       <aside class="sidebar">
+          <a href="../" class="sidebar-logo">
+             <img src="../assets/icon_alpha.png" alt="Burner">
+             <span>BURNER</span>
+          </a>
+          <nav>
+             <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="./" class="nav-link">Overview</a>
+                <a href="installation.html" class="nav-link">Installation</a>
+                <a href="quickstart.html" class="nav-link active">Quick Start</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Commands</div>
+                <a href="commands/new.html" class="nav-link">new</a>
+                <a href="commands/list.html" class="nav-link">list</a>
+                <a href="commands/burn.html" class="nav-link">burn</a>
+                <a href="commands/open.html" class="nav-link">open</a>
+                <a href="commands/import.html" class="nav-link">import</a>
+                <a href="commands/config.html" class="nav-link">config</a>
+                <a href="commands/templates.html" class="nav-link">templates</a>
+                <a href="commands/stats.html" class="nav-link">stats</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">Advanced</div>
+                <a href="custom-templates.html" class="nav-link">Custom Templates</a>
+                <a href="configuration.html" class="nav-link">Configuration</a>
+             </div>
+             <div class="nav-section">
+                <div class="nav-section-title">API Reference</div>
+                <a href="api/services.html" class="nav-link">Services</a>
+                <a href="api/models.html" class="nav-link">Models</a>
+                <a href="api/commands.html" class="nav-link">Commands</a>
+             </div>
+          </nav>
+       </aside>
+       <main class="main-content">
+          <h1>Quick Start</h1>
+          <p>Get up and running with Burner in under 5 minutes.</p>
+          <h2>1. Install Burner</h2>
+          <pre><code><span class="cmd">dotnet tool install</span> <span class="opt">-g</span> <span class="arg">Burner-CLI</span></code></pre>
+          <h2>2. Create Your First Project</h2>
+          <pre><code><span class="comment"># Create a .NET console app</span>
 <span class="cmd">burner new</span> <span class="arg">dotnet</span> <span class="string">hello-world</span></code></pre>
-            <p>This creates a new project at <code>~/.burner/projects/YYMMDD-hello-world</code>.</p>
-
-            <h2>3. Open the Project</h2>
-            <pre><code><span class="comment"># Open in your configured editor</span>
+          <p>This creates a new project at <code>~/.burner/projects/YYMMDD-hello-world</code>.</p>
+          <h2>3. Open the Project</h2>
+          <pre><code><span class="comment"># Open in your configured editor</span>
 <span class="cmd">burner open</span> <span class="string">hello-world</span> <span class="opt">-c</span></code></pre>
-
-            <h2>4. List Your Projects</h2>
-            <pre><code><span class="cmd">burner list</span></code></pre>
-            <p>Shows all your burner projects with their age and template.</p>
-
-            <h2>5. Clean Up When Done</h2>
-            <pre><code><span class="comment"># Delete a specific project</span>
+          <h2>4. List Your Projects</h2>
+          <pre><code><span class="cmd">burner list</span></code></pre>
+          <p>Shows all your burner projects with their age and template.</p>
+          <h2>5. Clean Up When Done</h2>
+          <pre><code><span class="comment"># Delete a specific project</span>
 <span class="cmd">burner burn</span> <span class="string">hello-world</span>
-
 <span class="comment"># Or delete old projects</span>
 <span class="cmd">burner burn</span> <span class="opt">--days</span> <span class="string">30</span></code></pre>
-
-            <h2>Common Workflows</h2>
-
-            <h3>Create and Open Immediately</h3>
-            <pre><code><span class="cmd">burner new</span> <span class="arg">web</span> <span class="string">quick-test</span> <span class="opt">-c</span></code></pre>
-
-            <h3>Import Existing Project</h3>
-            <pre><code><span class="comment"># Navigate to your project</span>
+          <h2>Common Workflows</h2>
+          <h3>Create and Open Immediately</h3>
+          <pre><code><span class="cmd">burner new</span> <span class="arg">web</span> <span class="string">quick-test</span> <span class="opt">-c</span></code></pre>
+          <h3>Import Existing Project</h3>
+          <pre><code><span class="comment"># Navigate to your project</span>
 <span class="cmd">cd</span> <span class="string">~/code/my-experiment</span>
-
 <span class="comment"># Import it to burner</span>
 <span class="cmd">burner import</span></code></pre>
-
-            <h3>View Statistics</h3>
-            <pre><code><span class="cmd">burner stats</span></code></pre>
-
-            <h3>Configure Your Editor</h3>
-            <pre><code><span class="cmd">burner config</span> <span class="opt">--editor</span> <span class="string">cursor</span></code></pre>
-
-            <h2>Next Steps</h2>
-            <ul>
-                <li><a href="custom-templates.html">Create Custom Templates</a></li>
-                <li><a href="configuration.html">Configure Burner</a></li>
-                <li><a href="commands/new.html">Explore All Commands</a></li>
-            </ul>
-        </main>
+          <h3>View Statistics</h3>
+          <pre><code><span class="cmd">burner stats</span></code></pre>
+          <h3>Configure Your Editor</h3>
+          <pre><code><span class="cmd">burner config</span> <span class="opt">--editor</span> <span class="string">cursor</span></code></pre>
+          <h2>Next Steps</h2>
+          <ul>
+             <li><a href="custom-templates.html">Create Custom Templates</a></li>
+             <li><a href="configuration.html">Configure Burner</a></li>
+             <li><a href="commands/new.html">Explore All Commands</a></li>
+          </ul>
+       </main>
     </div>
 </body>
 </html>
