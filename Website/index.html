@@ -893,16 +893,22 @@
 			}
 
 			// Create initial batch
-			for (let i = 0; i < 20; i++) {
-				setTimeout(() => createBurningChar(), i * 150);
+			for (let i = 0; i < 30; i++) {
+				setTimeout(() => createBurningChar(), i * 100);
 			}
 
-			// Continuously spawn new characters
+			// Continuously spawn new characters to maintain 20-40 visible
 			setInterval(() => {
-				if (document.querySelectorAll('.burn-char').length < 15) {
+				const currentCount = document.querySelectorAll('.burn-char').length;
+				if (currentCount < 20) {
+					// Spawn multiple if below minimum
+					for (let i = 0; i < 3; i++) {
+						createBurningChar();
+					}
+				} else if (currentCount < 40) {
 					createBurningChar();
 				}
-			}, 200 + Math.random() * 200);
+			}, 150);
 		})();
 	</script>
 </body>
