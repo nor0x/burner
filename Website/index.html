@@ -586,7 +586,7 @@
 					<div class="logo-section">
 						<img src="assets/icon_alpha.png" alt="Burner" class="logo-icon">
 						<span class="logo-text">BURNER</span>
-						<span class="version-badge">v1.0.0</span>
+						<span class="version-badge" id="versionBadge">v...</span>
 					</div>
 					<nav>
 						<a href="#features">Features</a>
@@ -806,12 +806,12 @@
 		<div class="container">
 			<p>
 				Built with <span style="color: var(--accent-orange);">&#x1F525;</span> by
-				<a href="https://github.com/nor0x">nor0x</a> |
-				<a href="https://github.com/nor0x/burner">GitHub</a> |
+				<a href="https://johnnys.page" target="_blank">Joachim Leonfellner</a> |
+				<a href="https://github.com/nor0x/burner" target="_blank">GitHub</a> |
 				MIT License
 			</p>
-			<p style="margin-top: 10px; color: var(--text-muted);">
-				Requires .NET 10.0 or later
+			<p style="margin-top: 10px; color: var(--text-muted);"> &copy; <span id="currentYear"></span> |
+				<a href="https://github.com/nor0x/burner/commit/__COMMIT_HASH__" target="_blank">__COMMIT_SHORT__</a>
 			</p>
 		</div>
 	</footer>
@@ -839,6 +839,21 @@
 		window.addEventListener('resize', updateHeroHeight);
 		// Also run immediately in case images are cached
 		updateHeroHeight();
+
+		// Set current year
+		document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+		// Fetch version from NuGet
+		(async function () {
+			try {
+				const response = await fetch('https://api.nuget.org/v3-flatcontainer/burner-cli/index.json');
+				const data = await response.json();
+				const latestVersion = data.versions[data.versions.length - 1];
+				document.getElementById('versionBadge').textContent = 'v' + latestVersion;
+			} catch (e) {
+				document.getElementById('versionBadge').textContent = 'v1.0.0';
+			}
+		})();
 
 		// Burning code characters effect
 		(function () {
