@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>burner import - Burner CLI Docs</title>
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="../../" class="sidebar-logo">
+                <img src="../../assets/icon_alpha.png" alt="Burner">
+                <span>BURNER</span>
+            </a>
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <a href="../" class="nav-link">Overview</a>
+                    <a href="../installation.html" class="nav-link">Installation</a>
+                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Commands</div>
+                    <a href="new.html" class="nav-link">new</a>
+                    <a href="list.html" class="nav-link">list</a>
+                    <a href="burn.html" class="nav-link">burn</a>
+                    <a href="open.html" class="nav-link">open</a>
+                    <a href="import.html" class="nav-link active">import</a>
+                    <a href="config.html" class="nav-link">config</a>
+                    <a href="templates.html" class="nav-link">templates</a>
+                    <a href="stats.html" class="nav-link">stats</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Advanced</div>
+                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                    <a href="../configuration.html" class="nav-link">Configuration</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">API Reference</div>
+                    <a href="../api/services.html" class="nav-link">Services</a>
+                    <a href="../api/models.html" class="nav-link">Models</a>
+                    <a href="../api/commands.html" class="nav-link">Commands</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>burner import</h1>
+            <p>Import the current folder as a burner project for unified tracking.</p>
+
+            <div class="command-card">
+                <div class="command-signature">
+                    <span class="cmd">burner</span> <span class="arg">import</span> <span class="opt">[options]</span>
+                </div>
+            </div>
+
+            <h2>Options</h2>
+            <table>
+                <thead>
+                    <tr><th>Option</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>-n, --name &lt;NAME&gt;</code></td>
+                        <td>Custom name for the imported project (defaults to current folder name)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-c, --copy</code></td>
+                        <td>Copy the folder instead of moving it</td>
+                    </tr>
+                    <tr>
+                        <td><code>-f, --force</code></td>
+                        <td>Skip confirmation prompt when moving</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Examples</h2>
+            <pre><code><span class="comment"># Move current folder to burner home</span>
+<span class="cmd">burner import</span>
+
+<span class="comment"># Import with custom name</span>
+<span class="cmd">burner import</span> <span class="opt">-n</span> <span class="string">my-project</span>
+
+<span class="comment"># Copy instead of moving</span>
+<span class="cmd">burner import</span> <span class="opt">--copy</span>
+
+<span class="comment"># Move without confirmation</span>
+<span class="cmd">burner import</span> <span class="opt">-n</span> <span class="string">my-project</span> <span class="opt">-f</span></code></pre>
+
+            <div class="warning-box">
+                <p><strong>Note:</strong> By default, the folder is <strong>moved</strong> to the burner home directory. The original location will be empty after import. Use <code>--copy</code> to keep the original.</p>
+            </div>
+
+            <h2>How It Works</h2>
+            <ol>
+                <li>Adds a <code>YYMMDD-</code> prefix to track the import date</li>
+                <li>Moves (or copies) the folder to burner home</li>
+                <li>Creates a <code>.burner-custom</code> marker file</li>
+                <li>Sets the template to <code>custom</code></li>
+            </ol>
+
+            <div class="info-box">
+                <p><strong>Tip:</strong> After moving, run <code>cd "new-path"</code> to navigate to your project at its new location.</p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

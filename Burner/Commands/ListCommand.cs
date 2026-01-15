@@ -6,13 +6,22 @@ using System.ComponentModel;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Settings for the list command.
+/// </summary>
 public class ListCommandSettings : CommandSettings
 {
+	/// <summary>
+	/// Show all details including full paths.
+	/// </summary>
 	[CommandOption("-a|--all")]
 	[Description("Show all details")]
 	public bool ShowAll { get; set; }
 }
 
+/// <summary>
+/// Lists all burner projects with their metadata.
+/// </summary>
 public class ListCommand : Command<ListCommandSettings>
 {
 	public override int Execute(CommandContext context, ListCommandSettings settings, CancellationToken cancellationToken)

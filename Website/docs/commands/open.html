@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>burner open - Burner CLI Docs</title>
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="../../" class="sidebar-logo">
+                <img src="../../assets/icon_alpha.png" alt="Burner">
+                <span>BURNER</span>
+            </a>
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <a href="../" class="nav-link">Overview</a>
+                    <a href="../installation.html" class="nav-link">Installation</a>
+                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Commands</div>
+                    <a href="new.html" class="nav-link">new</a>
+                    <a href="list.html" class="nav-link">list</a>
+                    <a href="burn.html" class="nav-link">burn</a>
+                    <a href="open.html" class="nav-link active">open</a>
+                    <a href="import.html" class="nav-link">import</a>
+                    <a href="config.html" class="nav-link">config</a>
+                    <a href="templates.html" class="nav-link">templates</a>
+                    <a href="stats.html" class="nav-link">stats</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Advanced</div>
+                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                    <a href="../configuration.html" class="nav-link">Configuration</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">API Reference</div>
+                    <a href="../api/services.html" class="nav-link">Services</a>
+                    <a href="../api/models.html" class="nav-link">Models</a>
+                    <a href="../api/commands.html" class="nav-link">Commands</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>burner open</h1>
+            <p>Open a project directory in your editor, file explorer, or get its path.</p>
+
+            <div class="command-card">
+                <div class="command-signature">
+                    <span class="cmd">burner</span> <span class="arg">open</span> <span class="opt">[name]</span> <span class="opt">[options]</span>
+                </div>
+            </div>
+
+            <h2>Arguments</h2>
+            <table>
+                <thead>
+                    <tr><th>Argument</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>[name]</code></td>
+                        <td>Project name to open. Interactive mode if not provided.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Options</h2>
+            <table>
+                <thead>
+                    <tr><th>Option</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>-e, --explorer</code></td>
+                        <td>Open in file explorer</td>
+                    </tr>
+                    <tr>
+                        <td><code>-c, --code</code></td>
+                        <td>Open in editor (uses configured editor)</td>
+                    </tr>
+                    <tr>
+                        <td><code>-i, --interactive</code></td>
+                        <td>Interactive mode: select project from list</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Examples</h2>
+            <pre><code><span class="comment"># Interactive: select project and action</span>
+<span class="cmd">burner open</span>
+
+<span class="comment"># Print project path (useful for scripting)</span>
+<span class="cmd">burner open</span> <span class="string">my-experiment</span>
+
+<span class="comment"># Open in editor</span>
+<span class="cmd">burner open</span> <span class="string">my-experiment</span> <span class="opt">-c</span>
+
+<span class="comment"># Open in file explorer</span>
+<span class="cmd">burner open</span> <span class="string">my-experiment</span> <span class="opt">-e</span>
+
+<span class="comment"># Change directory to project (bash/zsh)</span>
+<span class="cmd">cd</span> <span class="string">$(burner open my-experiment)</span></code></pre>
+
+            <h2>Interactive Mode</h2>
+            <p>When no project name is provided, interactive mode lets you:</p>
+            <ol>
+                <li>Select a project from a list</li>
+                <li>Choose an action:
+                    <ul>
+                        <li>Open in editor (uses configured editor)</li>
+                        <li>Open in file explorer</li>
+                        <li>Copy path to clipboard</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <div class="info-box">
+                <p><strong>Tip:</strong> Configure your preferred editor with <code>burner config --editor cursor</code></p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

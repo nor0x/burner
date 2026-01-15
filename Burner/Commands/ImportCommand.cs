@@ -6,21 +6,36 @@ using System.ComponentModel;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Settings for the import command.
+/// </summary>
 public class ImportCommandSettings : CommandSettings
 {
+	/// <summary>
+	/// Custom name for the imported project (defaults to current folder name).
+	/// </summary>
 	[CommandOption("-n|--name <NAME>")]
 	[Description("Custom name for the imported project (defaults to current folder name)")]
 	public string? Name { get; set; }
 
+	/// <summary>
+	/// Copy the folder instead of moving it.
+	/// </summary>
 	[CommandOption("-c|--copy")]
 	[Description("Copy the folder instead of moving it")]
 	public bool Copy { get; set; }
 
+	/// <summary>
+	/// Skip confirmation prompt when moving.
+	/// </summary>
 	[CommandOption("-f|--force")]
 	[Description("Skip confirmation prompt when moving")]
 	public bool Force { get; set; }
 }
 
+/// <summary>
+/// Imports the current directory as a burner project.
+/// </summary>
 public class ImportCommand : Command<ImportCommandSettings>
 {
 	public override int Execute(CommandContext context, ImportCommandSettings settings, CancellationToken cancellationToken)

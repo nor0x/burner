@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -23,6 +23,10 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
+
+		<!-- XML Documentation for DocFX -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);CS1591</NoWarn>
 
 		<!-- Source Link for debugging -->
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>

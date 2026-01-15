@@ -7,33 +7,57 @@ using System.Diagnostics;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Settings for the new command.
+/// </summary>
 public class NewCommandSettings : CommandSettings
 {
+	/// <summary>
+	/// Template to use (dotnet, web, or custom). Shows available templates if not provided.
+	/// </summary>
 	[CommandArgument(0, "[TEMPLATE]")]
 	[Description("Template to use (dotnet, web, or custom). Shows available templates if not provided.")]
 	public string? Template { get; set; }
 
+	/// <summary>
+	/// Project name (auto-generated if not provided).
+	/// </summary>
 	[CommandArgument(1, "[NAME]")]
 	[Description("Project name (auto-generated if not provided)")]
 	public string? Name { get; set; }
 
+	/// <summary>
+	/// Target directory (uses default burner home if not specified).
+	/// </summary>
 	[CommandOption("-d|--directory <PATH>")]
 	[Description("Target directory (uses default if not specified)")]
 	public string? Directory { get; set; }
 
+	/// <summary>
+	/// Open in file explorer after creation.
+	/// </summary>
 	[CommandOption("-e|--explorer")]
 	[Description("Open in file explorer after creation")]
 	public bool Explorer { get; set; }
 
+	/// <summary>
+	/// Open in editor after creation (uses configured editor).
+	/// </summary>
 	[CommandOption("-c|--code")]
 	[Description("Open in editor after creation (uses configured editor)")]
 	public bool Code { get; set; }
 
+	/// <summary>
+	/// Run template interactively (for templates requiring user input).
+	/// </summary>
 	[CommandOption("-i|--interactive")]
 	[Description("Run template interactively (for templates requiring user input)")]
 	public bool Interactive { get; set; }
 }
 
+/// <summary>
+/// Creates a new burner project from a template.
+/// </summary>
 public class NewCommand : Command<NewCommandSettings>
 {
 	public override int Execute(CommandContext context, NewCommandSettings settings, CancellationToken cancellationToken)

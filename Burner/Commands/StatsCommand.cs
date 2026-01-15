@@ -5,6 +5,9 @@ using Spectre.Console.Cli;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Displays statistics about burner projects including disk usage, age distribution, and template breakdown.
+/// </summary>
 public class StatsCommand : Command
 {
 	public override int Execute(CommandContext context, CancellationToken cancellationToken)

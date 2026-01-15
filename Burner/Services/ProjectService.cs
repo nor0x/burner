@@ -2,15 +2,26 @@ using Burner.Models;
 
 namespace Burner.Services;
 
+/// <summary>
+/// Manages burner projects - listing, retrieving, deleting, and importing.
+/// </summary>
 public class ProjectService
 {
 	private readonly BurnerConfig _config;
 
+	/// <summary>
+	/// Creates a new instance of the ProjectService.
+	/// </summary>
+	/// <param name="config">The burner configuration to use.</param>
 	public ProjectService(BurnerConfig config)
 	{
 		_config = config;
 	}
 
+	/// <summary>
+	/// Returns all projects in the burner home directory, sorted by creation date (newest first).
+	/// </summary>
+	/// <returns>An enumerable of all burner projects.</returns>
 	public IEnumerable<BurnerProject> GetAllProjects()
 	{
 		if (!Directory.Exists(_config.BurnerHome))
@@ -23,6 +34,11 @@ public class ProjectService
 			.OrderByDescending(p => p.CreatedAt);
 	}
 
+	/// <summary>
+	/// Gets a project by name. Supports partial name matching (suffix match).
+	/// </summary>
+	/// <param name="name">The project name or partial name to search for.</param>
+	/// <returns>The matching project, or null if not found.</returns>
 	public BurnerProject? GetProject(string name)
 	{
 		var projects = GetAllProjects();
@@ -31,6 +47,11 @@ public class ProjectService
 			p.Name.EndsWith($"-{name}", StringComparison.OrdinalIgnoreCase));
 	}
 
+	/// <summary>
+	/// Deletes projects older than the specified days. Uses config default if not provided.
+	/// </summary>
+	/// <param name="days">Number of days threshold. Projects older than this will be deleted.</param>
+	/// <returns>Count of deleted projects.</returns>
 	public int CleanupProjects(int? days = null)
 	{
 		var cleanupDays = days ?? _config.AutoCleanDays;
@@ -55,6 +76,11 @@ public class ProjectService
 		return projects.Count;
 	}
 
+	/// <summary>
+	/// Deletes a project by name.
+	/// </summary>
+	/// <param name="name">The project name to delete.</param>
+	/// <returns>True if successful, false otherwise.</returns>
 	public bool DeleteProject(string name)
 	{
 		var project = GetProject(name);
@@ -74,6 +100,8 @@ public class ProjectService
 	/// <summary>
 	/// Gets the destination path for an import operation without performing the import.
 	/// </summary>
+	/// <param name="projectName">The name for the imported project.</param>
+	/// <returns>The destination path, or null if destination already exists.</returns>
 	public string? GetImportDestinationPath(string projectName)
 	{
 		// Ensure burner home exists
@@ -92,6 +120,13 @@ public class ProjectService
 		return destinationPath;
 	}
 
+	/// <summary>
+	/// Imports a directory to burner home. Moves by default, copies if specified.
+	/// </summary>
+	/// <param name="sourceDir">The source directory to import.</param>
+	/// <param name="destinationPath">The destination path for the import.</param>
+	/// <param name="copy">If true, copies the directory; if false, moves it.</param>
+	/// <returns>A tuple containing success status and the resulting path.</returns>
 	public (bool Success, string? Path) ImportProject(string sourceDir, string destinationPath, bool copy = false)
 	{
 		// Check if source directory exists and is valid

@@ -6,41 +6,71 @@ using System.Diagnostics;
 
 namespace Burner.Commands;
 
+/// <summary>
+/// Settings for the config command.
+/// </summary>
 public class ConfigCommandSettings : CommandSettings
 {
+	/// <summary>
+	/// Set the burner home directory.
+	/// </summary>
 	[CommandOption("--home <PATH>")]
 	[Description("Set the burner home directory")]
 	public string? BurnerHome { get; set; }
 
+	/// <summary>
+	/// Set the burner templates directory.
+	/// </summary>
 	[CommandOption("--templates <PATH>")]
 	[Description("Set the burner templates directory")]
 	public string? BurnerTemplates { get; set; }
 
+	/// <summary>
+	/// Set auto-cleanup age in days (0 to disable).
+	/// </summary>
 	[CommandOption("--auto-clean-days <DAYS>")]
 	[Description("Set auto-cleanup age in days (0 to disable)")]
 	public int? AutoCleanDays { get; set; }
 
+	/// <summary>
+	/// Set the default editor command (e.g., code, cursor, rider).
+	/// </summary>
 	[CommandOption("--editor <EDITOR>")]
 	[Description("Set the default editor command (e.g., code, cursor, rider)")]
 	public string? Editor { get; set; }
 
+	/// <summary>
+	/// Show current configuration.
+	/// </summary>
 	[CommandOption("--show")]
 	[Description("Show current configuration")]
 	public bool Show { get; set; }
 
+	/// <summary>
+	/// Show config file path.
+	/// </summary>
 	[CommandOption("--path")]
 	[Description("Show config file path")]
 	public bool ShowPath { get; set; }
 
+	/// <summary>
+	/// Open the templates directory in file explorer.
+	/// </summary>
 	[CommandOption("--open-templates")]
 	[Description("Open the templates directory in file explorer")]
 	public bool OpenTemplates { get; set; }
 
+	/// <summary>
+	/// Open the burner home directory in file explorer.
+	/// </summary>
 	[CommandOption("--open-home")]
 	[Description("Open the burner home directory in file explorer")]
 	public bool OpenHome { get; set; }
 }
 
+/// <summary>
+/// Manages Burner CLI configuration settings.
+/// </summary>
 public class ConfigCommand : Command<ConfigCommandSettings>
 {
 	public override int Execute(CommandContext context, ConfigCommandSettings settings, CancellationToken cancellationToken)

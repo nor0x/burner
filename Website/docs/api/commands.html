@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commands API - Burner CLI Docs</title>
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="../../" class="sidebar-logo">
+                <img src="../../assets/icon_alpha.png" alt="Burner">
+                <span>BURNER</span>
+            </a>
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <a href="../" class="nav-link">Overview</a>
+                    <a href="../installation.html" class="nav-link">Installation</a>
+                    <a href="../quickstart.html" class="nav-link">Quick Start</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Commands</div>
+                    <a href="../commands/new.html" class="nav-link">new</a>
+                    <a href="../commands/list.html" class="nav-link">list</a>
+                    <a href="../commands/burn.html" class="nav-link">burn</a>
+                    <a href="../commands/open.html" class="nav-link">open</a>
+                    <a href="../commands/import.html" class="nav-link">import</a>
+                    <a href="../commands/config.html" class="nav-link">config</a>
+                    <a href="../commands/templates.html" class="nav-link">templates</a>
+                    <a href="../commands/stats.html" class="nav-link">stats</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Advanced</div>
+                    <a href="../custom-templates.html" class="nav-link">Custom Templates</a>
+                    <a href="../configuration.html" class="nav-link">Configuration</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">API Reference</div>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="models.html" class="nav-link">Models</a>
+                    <a href="commands.html" class="nav-link active">Commands</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Commands API Reference</h1>
+<p>CLI command implementations.</p>
+
+<!-- AUTO-GENERATED FROM SOURCE CODE - DO NOT EDIT MANUALLY -->
+<!-- Generated from XML documentation comments -->
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">BurnCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Deletes burner projects. Supports deleting by name, age, or interactively.</p>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">BurnCommandSettings</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Settings for the burn command.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">Name</code>
+            <p class="api-method-desc">Specific project name to delete (optional).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Days</code>
+            <p class="api-method-desc">Delete projects older than specified days.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Force</code>
+            <p class="api-method-desc">Skip confirmation prompt.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Interactive</code>
+            <p class="api-method-desc">Interactive mode: select projects to delete.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">All</code>
+            <p class="api-method-desc">Delete ALL burner projects.</p>
+        </div>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">ConfigCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Manages Burner CLI configuration settings.</p>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">ConfigCommandSettings</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Settings for the config command.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">BurnerHome</code>
+            <p class="api-method-desc">Set the burner home directory.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">BurnerTemplates</code>
+            <p class="api-method-desc">Set the burner templates directory.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">AutoCleanDays</code>
+            <p class="api-method-desc">Set auto-cleanup age in days (0 to disable).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Editor</code>
+            <p class="api-method-desc">Set the default editor command (e.g., code, cursor, rider).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Show</code>
+            <p class="api-method-desc">Show current configuration.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">ShowPath</code>
+            <p class="api-method-desc">Show config file path.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">OpenTemplates</code>
+            <p class="api-method-desc">Open the templates directory in file explorer.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">OpenHome</code>
+            <p class="api-method-desc">Open the burner home directory in file explorer.</p>
+        </div>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">ImportCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Imports the current directory as a burner project.</p>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">ImportCommandSettings</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Settings for the import command.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">Name</code>
+            <p class="api-method-desc">Custom name for the imported project (defaults to current folder name).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Copy</code>
+            <p class="api-method-desc">Copy the folder instead of moving it.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Force</code>
+            <p class="api-method-desc">Skip confirmation prompt when moving.</p>
+        </div>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">ListCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Lists all burner projects with their metadata.</p>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">ListCommandSettings</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Settings for the list command.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">ShowAll</code>
+            <p class="api-method-desc">Show all details including full paths.</p>
+        </div>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">NewCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Creates a new burner project from a template.</p>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">NewCommandSettings</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Settings for the new command.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">Template</code>
+            <p class="api-method-desc">Template to use (dotnet, web, or custom). Shows available templates if not provided.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Name</code>
+            <p class="api-method-desc">Project name (auto-generated if not provided).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Directory</code>
+            <p class="api-method-desc">Target directory (uses default burner home if not specified).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Explorer</code>
+            <p class="api-method-desc">Open in file explorer after creation.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Code</code>
+            <p class="api-method-desc">Open in editor after creation (uses configured editor).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Interactive</code>
+            <p class="api-method-desc">Run template interactively (for templates requiring user input).</p>
+        </div>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">OpenCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Opens a burner project in editor, file explorer, or outputs the path.</p>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">OpenCommandSettings</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Settings for the open command.</p>
+        <h4>Properties</h4>
+        <div class="api-method">
+            <code class="api-method-sig">Name</code>
+            <p class="api-method-desc">Project name to open (optional, interactive if not provided).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Explorer</code>
+            <p class="api-method-desc">Open in file explorer instead of terminal.</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Code</code>
+            <p class="api-method-desc">Open in editor (uses configured editor).</p>
+        </div>
+        <div class="api-method">
+            <code class="api-method-sig">Interactive</code>
+            <p class="api-method-desc">Interactive mode: select project from list.</p>
+        </div>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">StatsCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Displays statistics about burner projects including disk usage, age distribution, and template breakdown.</p>
+    </div>
+</div>
+
+<div class="api-class">
+    <div class="api-class-header">
+        <div class="api-class-name">TemplatesCommand</div>
+        <div class="api-class-namespace">Burner.Commands</div>
+    </div>
+    <div class="api-class-body">
+        <p>Lists all available project templates.</p>
+        <h4>Methods</h4>
+        <div class="api-method">
+            <code class="api-method-sig">ShowTemplatesTable(TemplateService templateService, BurnerConfig config)</code>
+            <p class="api-method-desc">Displays a formatted table of available templates.</p>
+        </div>
+    </div>
+</div>
+
+<h2>Source Files</h2>
+<ul>
+    <li><a href="https://github.com/nor0x/burner/blob/main/Burner/Commands/">Burner/Commands/</a></li>
+</ul>
+        </main>
+    </div>
+</body>
+</html>
