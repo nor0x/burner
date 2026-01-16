@@ -214,6 +214,62 @@
 				0 -2px 8px rgba(255, 68, 68, 0.2);
 		}
 
+		/* Why Section */
+		.why-section {
+			padding: 60px 0;
+			background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+		}
+
+		.why-content {
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			padding: 30px;
+		}
+
+		.why-quote {
+			font-size: 1.1rem;
+			color: var(--text-secondary);
+			font-style: italic;
+			margin-bottom: 20px;
+			padding-left: 20px;
+			border-left: 3px solid var(--accent-yellow);
+		}
+
+		.why-text {
+			color: var(--text-secondary);
+			margin-bottom: 15px;
+			font-size: 0.95rem;
+		}
+
+		.why-text strong {
+			color: var(--accent-orange);
+		}
+
+		.blog-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			margin-top: 15px;
+			padding: 12px 20px;
+			background: var(--bg-terminal);
+			border: 1px solid var(--border-color);
+			border-radius: 6px;
+			color: var(--text-primary);
+			text-decoration: none;
+			font-size: 0.9rem;
+			transition: border-color 0.2s, transform 0.2s;
+		}
+
+		.blog-link:hover {
+			border-color: var(--accent-orange);
+			transform: translateY(-2px);
+		}
+
+		.blog-link .link-icon {
+			font-size: 1.2rem;
+		}
+
 		/* Features */
 		.features {
 			padding: 60px 0;
@@ -500,13 +556,17 @@
 			opacity: 0;
 			animation: burnAndSmoke 8s ease-out forwards;
 			text-shadow: 0 0 4px currentColor;
-			--rotation: 0deg;
+			--rotateX: 0deg;
+			--rotateY: 0deg;
+			--rotateZ: 0deg;
+			--driftX: 0px;
+			transform-style: preserve-3d;
 		}
 
 		@keyframes burnAndSmoke {
 			0% {
 				opacity: 0;
-				transform: translateY(0) scale(1) rotate(var(--rotation));
+				transform: translateY(0) translateX(0) scale(1) rotateX(var(--rotateX)) rotateY(var(--rotateY)) rotateZ(var(--rotateZ));
 				color: #ff6b35;
 				text-shadow: 0 0 10px #ff6b35, 0 0 20px #f7931e, 0 0 30px #ff4444;
 				filter: blur(0px);
@@ -526,13 +586,14 @@
 
 			25% {
 				opacity: 0.5;
+				transform: translateY(-10px) translateX(var(--driftX)) scale(1.05) rotateX(calc(var(--rotateX) + 15deg)) rotateY(calc(var(--rotateY) + 20deg)) rotateZ(calc(var(--rotateZ) + 30deg));
 				color: #ffc107;
 				text-shadow: 0 0 8px #ffc107, 0 0 15px #f7931e;
 			}
 
 			55% {
 				opacity: 0.35;
-				transform: translateY(-25px) scale(1.1) rotate(var(--rotation));
+				transform: translateY(-25px) translateX(calc(var(--driftX) * 2)) scale(1.1) rotateX(calc(var(--rotateX) + 40deg)) rotateY(calc(var(--rotateY) + 50deg)) rotateZ(calc(var(--rotateZ) + 80deg));
 				color: #888;
 				text-shadow: 0 0 6px #666;
 				filter: blur(1px);
@@ -540,7 +601,7 @@
 
 			60% {
 				opacity: 0.1;
-				transform: translateY(-50px) scale(1.2) rotate(var(--rotation));
+				transform: translateY(-50px) translateX(calc(var(--driftX) * 2.5)) scale(1.2) rotateX(calc(var(--rotateX) + 55deg)) rotateY(calc(var(--rotateY) + 70deg)) rotateZ(calc(var(--rotateZ) + 110deg));
 				color: #555;
 				text-shadow: 0 0 3px #444;
 				filter: blur(2px);
@@ -548,7 +609,7 @@
 
 			100% {
 				opacity: 0;
-				transform: translateY(-70px) scale(1.3) rotate(var(--rotation));
+				transform: translateY(-70px) translateX(calc(var(--driftX) * 3)) scale(1.3) rotateX(calc(var(--rotateX) + 80deg)) rotateY(calc(var(--rotateY) + 100deg)) rotateZ(calc(var(--rotateZ) + 150deg));
 				color: #333;
 				filter: blur(5px);
 			}
@@ -621,6 +682,25 @@
 	</section>
 
 	<main>
+		<section class="why-section" id="why">
+			<div class="container">
+				<h2 class="section-title">// WHY BURNER?</h2>
+				<div class="why-content">
+					<div class="why-problem">
+						<p class="why-quote">"You create a folder called <code>test</code>. Then <code>test2</code>.
+							Then <code>test-new</code>. Then <code>test-final-v2-REAL</code>..."</p>
+						<p class="why-text">Sound familiar? Burner gives throwaway code a dedicated home - organized,
+							dated, and ready to burn when you're done.</p>
+						<a href="https://johnnys.news/2026/01/Throwaway-Code-Deserves-a-Throwaway-Home-Meet-Burner-CLI"
+							class="blog-link" target="_blank" rel="noopener">
+							<span class="link-icon">&#x1F4DD;</span>
+							<span>how and why Burner was created →</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<section class="features" id="features">
 			<div class="container">
 				<h2 class="section-title">// FEATURES</h2>
@@ -634,18 +714,20 @@
 					<div class="feature-card">
 						<div class="feature-icon">&#x1F4C1;</div>
 						<h3 class="feature-title">Organized Storage</h3>
-						<p class="feature-desc">All projects live in a unified burner directory with YYMMDD-NAME format
+						<p class="feature-desc">All projects live in a unified burner home directory with YYMMDD-NAME
+							format
 							for easy identification.</p>
 					</div>
 					<div class="feature-card">
 						<div class="feature-icon">&#x1F525;</div>
 						<h3 class="feature-title">Easy Cleanup</h3>
-						<p class="feature-desc">Remove projects when done with auto-cleaning of old experiments. Keep
-							your system tidy.</p>
+						<p class="feature-desc">Remove projects when done with auto-cleaning of old experiments. Or just
+							burn everything.</p>
+						</p>
 					</div>
 					<div class="feature-card">
 						<div class="feature-icon">&#x1F4E5;</div>
-						<h3 class="feature-title">Import Existing</h3>
+						<h3 class="feature-title">Imports</h3>
 						<p class="feature-desc">Move or copy existing folders into burner home for unified tracking and
 							management.</p>
 					</div>
@@ -873,9 +955,17 @@
 				const size = 1.0 + Math.random() * 1.2;
 				char.style.fontSize = size + 'rem';
 
-				// Random rotation (-45 to 45 degrees)
-				const rotation = (Math.random() - 0.5) * 90;
-				char.style.setProperty('--rotation', rotation + 'deg');
+				// Random 3D rotation
+				const rotateX = (Math.random() - 0.5) * 60; // -30 to 30 degrees
+				const rotateY = (Math.random() - 0.5) * 60; // -30 to 30 degrees
+				const rotateZ = (Math.random() - 0.5) * 90; // -45 to 45 degrees
+				char.style.setProperty('--rotateX', rotateX + 'deg');
+				char.style.setProperty('--rotateY', rotateY + 'deg');
+				char.style.setProperty('--rotateZ', rotateZ + 'deg');
+
+				// Random horizontal drift direction
+				const driftX = (Math.random() - 0.5) * 30; // -15 to 15 pixels
+				char.style.setProperty('--driftX', driftX + 'px');
 
 				// Random animation duration (6-12 seconds)
 				const duration = 6 + Math.random() * 6;
