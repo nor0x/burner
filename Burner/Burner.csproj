@@ -1,53 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net10.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-
-		<!-- Tool Configuration -->
-		<PackAsTool>true</PackAsTool>
-		<ToolCommandName>burner</ToolCommandName>
-
-		<!-- Package Metadata -->
-		<PackageId>Burner-CLI</PackageId>
-		<Version>1.0.0</Version>
-		<Authors>Joachim Leonfellner</Authors>
-		<Description>A CLI tool to create and manage temporary dev projects for quick experiments. Spark
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Tool Configuration -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>burner</ToolCommandName>
+    <!-- Package Metadata -->
+    <PackageId>Burner-CLI</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Joachim Leonfellner</Authors>
+    <Description>A CLI tool to create and manage temporary dev projects for quick experiments. Spark
 			ideas. Burn when done.</Description>
-		<PackageTags>cli;tool;dotnet-tool;scaffold;project;template;dev;experiment</PackageTags>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://github.com/nor0x/burner</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/nor0x/burner</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PackageReadmeFile>readme.md</PackageReadmeFile>
-		<PackageIcon>icon.png</PackageIcon>
-
-		<!-- XML Documentation for DocFX -->
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<NoWarn>$(NoWarn);CS1591</NoWarn>
-
-		<!-- Source Link for debugging -->
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Spectre.Console" Version="0.54.0" />
-		<PackageReference Include="Spectre.Console.Cli" Version="0.53.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\readme.md" Pack="true" PackagePath="\" />
-		<None Include="..\Art\icon.png" Pack="true" PackagePath="\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Include="Templates\*.ps1" />
-		<EmbeddedResource Include="Templates\*.sh" />
-	</ItemGroup>
-
+    <PackageTags>cli;tool;dotnet-tool;scaffold;project;template;dev;experiment</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nor0x/burner</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nor0x/burner</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <!-- XML Documentation for DocFX -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!-- Source Link for debugging -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" />
+    <PackageReference Include="Spectre.Console.Cli" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\readme.md" Pack="true" PackagePath="\" />
+    <None Include="..\Art\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\*.ps1" />
+    <EmbeddedResource Include="Templates\*.sh" />
+  </ItemGroup>
 </Project>
