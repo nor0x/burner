@@ -38,8 +38,8 @@ A CLI tool to create and manage temporary dev projects for quick experiments.
 - Git
 
 ### Dependencies
-- [Spectre.Console](https://spectreconsole.net/) 0.49.1 – Rich console UI
-- [Spectre.Console.Cli](https://spectreconsole.net/) 0.49.1 – Command-line parsing
+- [Spectre.Console](https://spectreconsole.net/) 0.54.0 – Rich console UI
+- [Spectre.Console.Cli](https://spectreconsole.net/) 0.53.1 – Command-line parsing
 
 ### Test Framework
 - [xUnit](https://xunit.net/) 2.9.3
