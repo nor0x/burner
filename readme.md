@@ -70,6 +70,8 @@ Create a new project from a template. Name is auto-generated if not provided.
 burner new dotnet                    # Auto-name: dotnet-HHMMSS
 burner new dotnet my-experiment      # Create .NET console app
 burner new web quick-test            # Create HTML/JS/CSS project
+burner new blank scratch             # Create an empty burner folder
+burner new git notes                 # Create an empty Git repo with README
 burner new react my-app -d ~/code    # Use custom directory
 burner new svelte my-app -i          # Interactive mode for prompts
 ```

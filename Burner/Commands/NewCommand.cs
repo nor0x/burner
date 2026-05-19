@@ -13,10 +13,10 @@ namespace Burner.Commands;
 public class NewCommandSettings : CommandSettings
 {
 	/// <summary>
-	/// Template to use (dotnet, web, or custom). Shows available templates if not provided.
+	/// Template to use (e.g., dotnet, web, blank, git, or custom). Shows available templates if not provided.
 	/// </summary>
 	[CommandArgument(0, "[TEMPLATE]")]
-	[Description("Template to use (dotnet, web, or custom). Shows available templates if not provided.")]
+	[Description("Template to use (e.g., dotnet, web, blank, git, or custom). Shows available templates if not provided.")]
 	public string? Template { get; set; }
 
 	/// <summary>

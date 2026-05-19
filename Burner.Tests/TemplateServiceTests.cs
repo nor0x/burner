@@ -40,6 +40,8 @@ public class TemplateServiceTests : IDisposable
 
 		Assert.Contains("dotnet", templates);
 		Assert.Contains("web", templates);
+		Assert.Contains("blank", templates);
+		Assert.Contains("git", templates);
 	}
 
 	[Fact]
@@ -88,6 +90,34 @@ public class TemplateServiceTests : IDisposable
 		Assert.True(File.Exists(Path.Combine(projectDir, "index.html")));
 		Assert.True(File.Exists(Path.Combine(projectDir, "styles.css")));
 		Assert.True(File.Exists(Path.Combine(projectDir, "script.js")));
+	}
+
+	[Fact]
+	public void CreateProject_BlankTemplate_CreatesEmptyDirectory()
+	{
+		var result = _service.CreateProject("blank", "blank-test");
+
+		Assert.True(result);
+
+		var projectDir = Directory.GetDirectories(_testDir, "*-blank-test").First();
+		Assert.Empty(Directory.GetFileSystemEntries(projectDir));
+	}
+
+	[Fact]
+	public void CreateProject_GitTemplate_CreatesGitRepositoryAndReadme()
+	{
+		if (!IsGitAvailable())
+		{
+			return;
+		}
+
+		var result = _service.CreateProject("git", "git-test");
+
+		Assert.True(result);
+
+		var projectDir = Directory.GetDirectories(_testDir, "*-git-test").First();
+		Assert.True(Directory.Exists(Path.Combine(projectDir, ".git")));
+		Assert.True(File.Exists(Path.Combine(projectDir, "README.md")));
 	}
 
 	[Fact]
@@ -225,5 +255,32 @@ Write-Host 'Too late'";
 		var expectedPrefix = DateTime.Now.ToString("yyMMdd");
 		var projectDirs = Directory.GetDirectories(_testDir, $"{expectedPrefix}-interactive-project");
 		Assert.Single(projectDirs);
+	}
+
+	private static bool IsGitAvailable()
+	{
+		try
+		{
+			var process = new System.Diagnostics.Process
+			{
+				StartInfo = new System.Diagnostics.ProcessStartInfo
+				{
+					FileName = "git",
+					Arguments = "--version",
+					UseShellExecute = false,
+					RedirectStandardOutput = true,
+					RedirectStandardError = true,
+					CreateNoWindow = true
+				}
+			};
+
+			process.Start();
+			process.WaitForExit();
+			return process.ExitCode == 0;
+		}
+		catch
+		{
+			return false;
+		}
 	}
 }
