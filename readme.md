@@ -72,6 +72,7 @@ burner new dotnet my-experiment      # Create .NET console app
 burner new web quick-test            # Create HTML/JS/CSS project
 burner new blank scratch             # Create an empty burner folder
 burner new git notes                 # Create an empty Git repo with README
+burner new python hello              # Create a Python hello world starter
 burner new react my-app -d ~/code    # Use custom directory
 burner new svelte my-app -i          # Interactive mode for prompts
 ```
@@ -164,6 +165,7 @@ burner stats    # Overview, projects by template, age distribution
 |----------|-------------|
 | `dotnet` | .NET Console Application |
 | `web`    | HTML + JS + CSS Web App |
+| `python` | Python Hello World Starter |
 
 ## Custom Templates
 

@@ -42,6 +42,7 @@ public class TemplateServiceTests : IDisposable
 		Assert.Contains("web", templates);
 		Assert.Contains("blank", templates);
 		Assert.Contains("git", templates);
+		Assert.Contains("python", templates);
 	}
 
 	[Fact]
@@ -101,6 +102,19 @@ public class TemplateServiceTests : IDisposable
 
 		var projectDir = Directory.GetDirectories(_testDir, "*-blank-test").First();
 		Assert.Empty(Directory.GetFileSystemEntries(projectDir));
+	}
+
+	[Fact]
+	public void CreateProject_PythonTemplate_CreatesRequiredFiles()
+	{
+		var result = _service.CreateProject("python", "python-test");
+
+		Assert.True(result);
+
+		var projectDir = Directory.GetDirectories(_testDir, "*-python-test").First();
+		Assert.True(File.Exists(Path.Combine(projectDir, "main.py")));
+		Assert.True(File.Exists(Path.Combine(projectDir, "requirements.txt")));
+		Assert.True(File.Exists(Path.Combine(projectDir, "README.md")));
 	}
 
 	[Fact]
